@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ticket.TicketQuery"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv_previousDay"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="前一天"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:background="#29B6F6"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:background="#81D4FA">
+            <TextView
+                android:id="@+id/TicketDateTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2019-7-5 星期五"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/TicketStationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="北京 - 大连"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_afterDay"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:textColor="#ffffff"
+            android:text="后一天"
+            android:background="#29B6F6"
+            android:gravity="center"/>
+    </LinearLayout>
+    <ListView
+        android:id="@+id/TicketInformation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </ListView>
+</LinearLayout>

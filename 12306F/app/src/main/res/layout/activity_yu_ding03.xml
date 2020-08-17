@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ticket.YuDing03">
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="0dp"
+        android:layout_height="142dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="98dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/start_city_03"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:gravity="center"
+                android:text="北京" />
+
+            <TextView
+                android:id="@+id/textView_fachetime03"
+                android:layout_width="match_parent"
+                android:layout_height="69dp"
+                android:gravity="center|top"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/textView_leixing03"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|top"
+                android:text="TextView" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="208dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_liechehao03"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:gravity="center" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                app:srcCompat="@drawable/to" />
+
+            <TextView
+                android:id="@+id/textView_date03"
+                android:layout_width="match_parent"
+                android:layout_height="39dp"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/arrive_city_03"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:gravity="center"
+                android:text="大连" />
+
+            <TextView
+                android:id="@+id/textView_arrivaltime03"
+                android:layout_width="match_parent"
+                android:layout_height="69dp"
+                android:gravity="center|top"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/textView_price03"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|top"
+                android:text="TextView" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView_addren03"
+        android:layout_width="356dp"
+        android:layout_height="39dp"
+        android:gravity="center|left"
+        android:text="+添加乘车人"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+
+    <ListView
+        android:id="@+id/yuding03_listView"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_addren03"
+        android:layout_marginRight="1dp" />
+
+    <TextView
+        android:id="@+id/textView_jiesuan03"
+        android:layout_width="250dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="40dp"
+        android:background="#6FA5FB"
+        android:gravity="center|left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/yuding03_listView"
+        android:layout_marginLeft="25dp" />
+
+    <TextView
+        android:id="@+id/textView_tijiao03"
+        android:layout_width="85dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="40dp"
+        android:background="#F15627"
+        android:text="提交"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@+id/textView_jiesuan03"
+        app:layout_constraintTop_toBottomOf="@+id/yuding03_listView" />
+</androidx.constraintlayout.widget.ConstraintLayout>

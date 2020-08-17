@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.a12306f">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+        tools:ignore="ProtectedPermissions" />
+
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".order.TicketInfoFragment"></activity>
+        <activity android:name=".order.TicketOrderPayedActivity" />
+        <activity
+            android:name=".my.MyContactEdit"
+            android:label="编辑联系人" />
+        <activity
+            android:name=".my.MyContactAdd"
+            android:label="添加联系人" />
+        <activity
+            android:name=".my.MyPasswordActivity"
+            android:label="我的密码" />
+        <activity
+            android:name=".my.MyAccountActivity"
+            android:label="我的账户" />
+        <activity
+            android:name=".my.MyContactActivity"
+            android:label="我的联系人" />
+        <activity
+            android:name=".order.TicketPayedSuccessActivity"
+            android:label="5/5预定" />
+        <activity android:name=".order.TicketNeedPayActivity" />
+        <activity
+            android:name=".my.ACA03AddActivity"
+            android:label="添加乘车人"></activity>
+        <activity
+            android:name=".my.AddContactsActivity"
+            android:label="添加乘车人" />
+        <activity
+            android:name=".ticket.YuDing04"
+            android:label="4/5预定" />
+        <activity
+            android:name=".ticket.YuDing03"
+            android:label="3/5预定" />
+        <activity
+            android:name=".ticket.YuDing02"
+            android:label="2/5预定" />
+        <activity
+            android:name=".ticket.TicketQuery"
+            android:label="1/5预定" />
+        <activity
+            android:name=".fragment.MyFragment"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".fragment.OrderFragment"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".fragment.TicketFragment"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".ViewPagerActivity"
+            android:label="铁路12306"></activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".stationlist.StationListActivity" />
+    </application>
+
+</manifest>
