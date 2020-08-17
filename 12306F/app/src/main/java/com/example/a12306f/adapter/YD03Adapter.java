@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.media.CamcorderProfile.get;
+
 public class YD03Adapter extends BaseAdapter {
 
     private Context context;
@@ -58,12 +60,12 @@ public class YD03Adapter extends BaseAdapter {
         holder.textView_name_YD03.setText(list.get(position).get("name").toString());
         holder.textView_ID_YD03.setText(list.get(position).get("idCard").toString());
         holder.textView_phone_YD03.setText(list.get(position).get("tel").toString());
-        holder.imageView_YD03.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                list.remove(position);
-            }
-        });
+//        holder.imageView_YD03.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                list.remove(position);
+//            }
+//        });
         return convertView;
     }
 

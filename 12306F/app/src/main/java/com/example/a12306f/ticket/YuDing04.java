@@ -60,6 +60,7 @@ public class YuDing04 extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     intent.setClass(YuDing04.this, ViewPagerActivity.class);
+                    startActivity(intent);
                     finish();
                 }
             });

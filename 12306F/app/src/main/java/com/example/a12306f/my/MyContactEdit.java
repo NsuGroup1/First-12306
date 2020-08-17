@@ -83,7 +83,7 @@ public class MyContactEdit extends AppCompatActivity {
         data.add(map3);
 
         Map<String,Object> map4 = new HashMap<>();
-        String age = (String) contact.get("age");
+        String age = (String) contact.get("name");
         map4.put("k1","乘客类型");
         map4.put("k2",age.split("\\(")[1].split("\\)")[0]);
         map4.put("k3",R.drawable.forward_25);

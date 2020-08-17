@@ -1,33 +1,25 @@
 package com.example.a12306f.my;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.a12306f.R;
-import com.example.a12306f.a.Passenger;
 import com.example.a12306f.adapter.ContactsAdapter;
-import com.example.a12306f.ticket.YuDing03;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -114,12 +106,14 @@ public class AddContactsActivity extends AppCompatActivity {
 //                    intent2.putExtras(bundle2);
 //                }
                 Intent intent = new Intent(AddContactsActivity.this,ACA03AddActivity.class);
-                Bundle bundle = new Bundle();
-//                bundle.putSerializable("data", (Serializable) list);
-                bundle.putString("name_ACA",list.get(position).get("name").toString());
-                bundle.putString("ID_ACA",list.get(position).get("idCard").toString());
-                bundle.putString("phone_ACA",list.get(position).get("tel").toString());
-                intent.putExtras(bundle);
+//                Bundle bundle = new Bundle();
+////                bundle.putSerializable("data", (Serializable) list);
+//                bundle.putString("name_ACA",list.get(position).get("name").toString());
+//                bundle.putString("ID_ACA",list.get(position).get("idCard").toString());
+//                bundle.putString("phone_ACA",list.get(position).get("tel").toString());
+//                intent.putExtras(bundle);
+                intent.putExtra("row", (Serializable) list.get(position));
+                intent.setClass(AddContactsActivity.this, MyContactEdit.class);
                 startActivity(intent);
             }
         });
@@ -165,7 +159,10 @@ public class AddContactsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.add:
-
+                Intent intent = new Intent();
+                intent.setClass(AddContactsActivity.this,MyContactAdd.class);
+                startActivity(intent);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

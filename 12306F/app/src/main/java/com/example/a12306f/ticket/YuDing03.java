@@ -3,8 +3,10 @@ package com.example.a12306f.ticket;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -46,6 +48,7 @@ public class YuDing03 extends AppCompatActivity {
     private String ID;
     private String phone;
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,13 +69,16 @@ public class YuDing03 extends AppCompatActivity {
         textView_liechehao03 = findViewById(R.id.textView_liechehao03);
 
         textView_liechehao03.setText(getIntent().getStringExtra("LieCheHao"));
+        textView_liechehao03.setTextColor(Color.BLACK);
         start_city_03.setText(getIntent().getStringExtra("StationName").split("-")[0]);
         arrive_city_03.setText(getIntent().getStringExtra("StationName").split("-")[1]);
         textView_fachetime03.setText(getIntent().getStringExtra("FromToTime").split("-")[0]);
-        textView_arrivaltime03.setText(getIntent().getStringExtra("FromToTime").split("-")[1]);
+        textView_arrivaltime03.setText(getIntent().getStringExtra("FromToTime").split("-")[1].split("\\(")[0]);
         textView_date03.setText(getIntent().getStringExtra("TicketDate").split(" ")[0] + "(" + getIntent().getIntExtra("day", 0) + "日)");
+        textView_date03.setTextColor(Color.BLACK);
         textView_leixing03.setText(getIntent().getStringExtra("Seat"));
         textView_price03.setText(getIntent().getStringExtra("SeatPrice"));
+        textView_price03.setTextColor(R.color.orange);
 
 //        list_YD03 = new ArrayList<>();
 //        yd03Adapter = new YD03Adapter(this,list_YD03);
@@ -113,6 +119,7 @@ public class YuDing03 extends AppCompatActivity {
                 String money = textView_price03.getText().toString().split("￥")[1].split("\\.")[0];
                 int m = Integer.valueOf(money);
                 textView_jieusuan03.setText("订单总额:￥" + (int) list_YD03.size() * m + "元");
+                textView_jieusuan03.setTextSize(20);
 
 //                adapter = new SimpleAdapter(this,
 //                        list_YD03,

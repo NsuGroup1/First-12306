@@ -96,6 +96,8 @@ public class MyContactActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case android.R.id.home:
+                finish();
+                break;
 
         }
         return super.onOptionsItemSelected(item);

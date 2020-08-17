@@ -24,15 +24,18 @@
                 android:id="@+id/start_city_03"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:gravity="center"
-                android:text="北京" />
+                android:gravity="center|bottom"
+                android:text="北京"
+                android:textSize="20sp"
+                android:textColor="#000000"/>
 
             <TextView
                 android:id="@+id/textView_fachetime03"
                 android:layout_width="match_parent"
-                android:layout_height="69dp"
-                android:gravity="center|top"
-                android:text="TextView" />
+                android:layout_height="58dp"
+                android:gravity="center"
+                android:text="TextView"
+                android:textColor="#CCCCCC"/>
 
             <TextView
                 android:id="@+id/textView_leixing03"
@@ -52,7 +55,8 @@
                 android:id="@+id/textView_liechehao03"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:gravity="center" />
+                android:gravity="center"
+                />
 
             <ImageView
                 android:id="@+id/imageView"
@@ -76,32 +80,41 @@
                 android:id="@+id/arrive_city_03"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:gravity="center"
-                android:text="大连" />
+                android:gravity="center|bottom"
+                android:text="大连"
+                android:textSize="20sp"
+                android:textColor="#000000"/>
 
             <TextView
                 android:id="@+id/textView_arrivaltime03"
                 android:layout_width="match_parent"
-                android:layout_height="69dp"
-                android:gravity="center|top"
-                android:text="TextView" />
+                android:layout_height="58dp"
+                android:gravity="center"
+                android:text="TextView"
+                android:textColor="#CCCCCC"/>
 
             <TextView
                 android:id="@+id/textView_price03"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center|top"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textColor="#FFA500"/>
 
         </LinearLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView_addren03"
-        android:layout_width="356dp"
+        android:layout_width="0dp"
         android:layout_height="39dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:gravity="center|left"
         android:text="+添加乘车人"
+        android:textColor="#FFA500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
@@ -110,33 +123,36 @@
         android:id="@+id/yuding03_listView"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:layout_marginEnd="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_addren03"
-        android:layout_marginRight="1dp" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_addren03" />
 
     <TextView
         android:id="@+id/textView_jiesuan03"
         android:layout_width="250dp"
         android:layout_height="55dp"
-        android:layout_marginStart="25dp"
         android:layout_marginTop="40dp"
         android:background="#6FA5FB"
         android:gravity="center|left"
+        android:textColor="#ffffff"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/yuding03_listView"
-        android:layout_marginLeft="25dp" />
+        app:layout_constraintTop_toBottomOf="@+id/yuding03_listView" />
 
     <TextView
         android:id="@+id/textView_tijiao03"
-        android:layout_width="85dp"
+        android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginTop="40dp"
         android:background="#F15627"
-        android:text="提交"
-        android:textColor="#ffffff"
         android:gravity="center"
+        android:text="提交"
+        android:textSize="20sp"
+        android:textColor="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView_jiesuan03"
         app:layout_constraintTop_toBottomOf="@+id/yuding03_listView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
