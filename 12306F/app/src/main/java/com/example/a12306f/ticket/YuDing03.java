@@ -102,18 +102,17 @@ public class YuDing03 extends AppCompatActivity {
             case RESULT_OK:
                 list_YD03 = new ArrayList<Map<String, Object>>();
                 list_YD03 = (List<Map<String, Object>>) datalist.getSerializableExtra("contactdata");
-//
-//                passengers = new Passenger[list_YD03.size()];
-//                for (int i = 0; i < list_YD03.size(); i++) {
-//                    passengers[i] = (Passenger) list_YD03.get(i).get("passenger");
-//                }
+                passengers = new Passenger[list_YD03.size()];
+                for (int i = 0; i < list_YD03.size(); i++) {
+                    passengers[i] = (Passenger) list_YD03.get(i).get("passenger");
+                }
 
                 //TODO 计算价钱
 //                int PriceSum = Integer.parseInt(getIntent().getStringExtra("SeatPrice"));
 //                Log.d("ss2", String.valueOf(PriceSum));
-//                String money = textView_price03.getText().toString().split("￥")[0];
-//                int m = Integer.parseInt(money);
-//                textView_jieusuan03.setText("订单总额:￥" + (int) list_YD03.size() * m + "元");
+                String money = textView_price03.getText().toString().split("￥")[1].split("\\.")[0];
+                int m = Integer.valueOf(money);
+                textView_jieusuan03.setText("订单总额:￥" + (int) list_YD03.size() * m + "元");
 
 //                adapter = new SimpleAdapter(this,
 //                        list_YD03,
@@ -122,7 +121,6 @@ public class YuDing03 extends AppCompatActivity {
 //                        new int[]{R.id.textView_name_YD03, R.id.textView_ID_YD03, R.id.textView_phone_YD03});
                 yd03Adapter = new YD03Adapter(this, list_YD03);
                 listView_YD03.setAdapter(yd03Adapter);
-
                 break;
         }
     }

@@ -8,6 +8,7 @@
 
     <ListView
         android:id="@+id/lv_my"
+        android:foregroundGravity="center"
         android:layout_width="406dp"
         android:layout_height="470dp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -20,6 +20,12 @@ public class YD03Adapter extends BaseAdapter {
     private List<Map<String, Object>> list;
     private LayoutInflater layoutInflater;
 
+    public YD03Adapter(Context context,List<Map<String,Object>> list){
+        this.context = context;
+        this.list = list;
+        layoutInflater = LayoutInflater.from(context);
+
+    }
     @Override
     public int getCount() {
         return list.size();
@@ -50,8 +56,8 @@ public class YD03Adapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.textView_name_YD03.setText(list.get(position).get("name").toString());
-        holder.textView_ID_YD03.setText(list.get(position).get("ID").toString());
-        holder.textView_phone_YD03.setText(list.get(position).get("phone").toString());
+        holder.textView_ID_YD03.setText(list.get(position).get("idCard").toString());
+        holder.textView_phone_YD03.setText(list.get(position).get("tel").toString());
         holder.imageView_YD03.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,12 +72,7 @@ public class YD03Adapter extends BaseAdapter {
         private ImageView imageView_YD03;
     }
 
-    public YD03Adapter(Context context,List<Map<String,Object>> list){
-        this.context = context;
-        this.list = list;
-        layoutInflater = LayoutInflater.from(context);
 
-    }
 
 
 }

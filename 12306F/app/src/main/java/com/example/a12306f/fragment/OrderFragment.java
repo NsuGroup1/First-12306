@@ -34,13 +34,10 @@ public class OrderFragment extends Fragment {
 
     private TextView tvWaitToPay, tvAll;
     private ListView lvOrder;
-//    private SimpleAdapter adapter;
 
     private List<Map<String, Object>> data;
     private OrderAdapter orderAdapter;
     private int status = 0;//未支付订单
-    private Order[] orders;
-
 
 //    private TicketNeedPayActivity ticketNeedPayActivity = new TicketNeedPayActivity();
 
@@ -98,6 +95,7 @@ public class OrderFragment extends Fragment {
 
         orderAdapter = new OrderAdapter(getActivity(), data);
         lvOrder.setAdapter(orderAdapter);
+
         lvOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -195,7 +193,5 @@ public class OrderFragment extends Fragment {
         protected Object doInBackground(String... strings) {
             return null;
         }
-
-
     }
 }
