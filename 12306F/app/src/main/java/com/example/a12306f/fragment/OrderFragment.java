@@ -34,30 +34,32 @@ public class OrderFragment extends Fragment {
 
     private TextView tvWaitToPay, tvAll;
     private ListView lvOrder;
-    private SimpleAdapter adapter;
-    private List<Map<String,Object>> data;
+//    private SimpleAdapter adapter;
+
+    private List<Map<String, Object>> data;
     private OrderAdapter orderAdapter;
     private int status = 0;//未支付订单
     private Order[] orders;
 
 
-    private TicketNeedPayActivity ticketNeedPayActivity = new TicketNeedPayActivity();
+//    private TicketNeedPayActivity ticketNeedPayActivity = new TicketNeedPayActivity();
 
-    private String[] orderId = {"订单编号:101943","订单编号:101943","订单编号:101943"};
-    private String[] orderStatus = {"未支付","已支付","取消"};
-    private String[] orderTrainNo = {"G108","D3","D5"};
-    private String[] orderDateFrom = {"2019-7-30","2019-8-5","2019-8-30"};
-    private String[] orderStationFrom = {"北京-成都 2人","北京-上海 2人","武汉-成都 2人"};
-    private String[] orderPrice = {"￥1300","￥1020","￥998"};
-    private int[] orderFlag = {R.drawable.forward_25,R.drawable.flg_null,R.drawable.flg_null};
+    private String[] orderId = {"订单编号:101943", "订单编号:101944", "订单编号:101945"};
+    private String[] orderStatus = {"未支付", "已支付", "取消"};
+    private String[] orderTrainNo = {"G108", "D3", "D5"};
+    private String[] orderDateFrom = {"2019-7-30", "2019-8-5", "2019-8-30"};
+    private String[] orderStationFrom = {"北京-成都 2人", "北京-上海 1人", "武汉-成都 2人"};
+    private String[] orderPrice = {"￥1300", "￥510", "￥998"};
+    private int[] orderFlag = {R.drawable.forward_25, R.drawable.forward_25, R.drawable.flg_null};
 
-    public OrderFragment(){
+    public OrderFragment() {
 
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.ticket_info_fragment,container,false);
+        return inflater.inflate(R.layout.ticket_info_fragment, container, false);
     }
 
     @Override
@@ -70,30 +72,32 @@ public class OrderFragment extends Fragment {
         tvAll = view.findViewById(R.id.tv_order_all);
         lvOrder = view.findViewById(R.id.lv_order);
 
+        tvWaitToPay.setOnClickListener(new OrderHandle());
+        tvAll.setOnClickListener(new OrderHandle());
+
         data = new ArrayList<>();
-        for (int i=0;i<orderId.length;i++){
-            Map<String,Object> map = new HashMap<>();
-            map.put("orderId",orderId[i]);
-            map.put("orderStatus",orderStatus[i]);
-            map.put("orderTrainNo",orderTrainNo[i]);
-            map.put("orderDateFrom",orderDateFrom[i]);
-            map.put("orderStationFrom",orderStationFrom[i]);
-            map.put("orderPrice",orderPrice[i]);
-            map.put("orderFlag",orderFlag[i]);
+        for (int i = 0; i < 1; i++) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("orderId", orderId[i]);
+            map.put("orderStatus", orderStatus[i]);
+            map.put("orderTrainNo", orderTrainNo[i]);
+            map.put("orderDateFrom", orderDateFrom[i]);
+            map.put("orderStationFrom", orderStationFrom[i]);
+            map.put("orderPrice", orderPrice[i]);
+            map.put("orderFlag", orderFlag[i]);
             data.add(map);
         }
 
 
+//        adapter = new SimpleAdapter(
+//                getActivity(),
+//                data,
+//                R.layout.item_ticket_order,
+//                new String[]{"orderId","orderStatus","orderTrainNo","orderDateFrom","orderStationFrom","orderPrice"},
+//                new int[]{R.id.tv_order,R.id.tv_order_status,R.id.tv_order_train_num,R.id.tv_order_date,R.id.tv_order_station,R.id.tv_order_price});
 
-        adapter = new SimpleAdapter(
-                getActivity(),
-                data,
-                R.layout.item_ticket_order,
-                new String[]{"orderId","orderStatus","orderTrainNo","orderDateFrom","orderStationFrom","orderPrice"},
-                new int[]{R.id.tv_order,R.id.tv_order_status,R.id.tv_order_train_num,R.id.tv_order_date,R.id.tv_order_station,R.id.tv_order_price});
-
-        lvOrder.setAdapter(adapter);
-
+        orderAdapter = new OrderAdapter(getActivity(), data);
+        lvOrder.setAdapter(orderAdapter);
         lvOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -115,49 +119,61 @@ public class OrderFragment extends Fragment {
                         startActivity(intent);
                         break;
                     case 1:
-                        intent.setClass(getActivity(),TicketOrderPayedActivity.class);
+                        intent.setClass(getActivity(), TicketOrderPayedActivity.class);
                         startActivity(intent);
                         break;
                 }
             }
         });
-//
-
-//
-//        }
-        tvWaitToPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                tvWaitToPay.setBackgroundResource(R.drawable.cab_background_bottom_mainbar);
-                tvWaitToPay.setBackgroundResource(R.drawable.cab_background_bottom_mainbar);
-                tvAll.setBackgroundResource(0);
-                status = 1;
-                new OrderTask().execute();
-                adapter.notifyDataSetChanged();
-            }
-        });
-        tvAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvWaitToPay.setBackgroundResource(0);
-                tvAll.setBackgroundResource(R.drawable.cab_background_bottom_mainbar);
-            }
-        });
-
     }
-    public View getView(int position, View convertView, ViewGroup parent) {
-        TextView text =  convertView.findViewById(R.id.tv_order_status);
-        for (position=0;position<orderId.length;position++) {
-            if (text.equals("未支付")){
-                text.setTextColor(Color.YELLOW);
-            }else if (text.equals("已支付")){
-                text.setTextColor(Color.BLUE);
-            }else{
-                text.setTextColor(Color.GRAY);
+
+    private class OrderHandle implements View.OnClickListener {
+        @Override
+        public void onClick(View view1) {
+            data.clear();
+            switch (view1.getId()) {
+                case R.id.tv_order_wait_to_Pay:
+                    tvWaitToPay.setBackgroundResource(R.drawable.cab_background_bottom_mainbar);
+                    tvAll.setBackgroundResource(0);
+//                         status = 1;
+//                          new OrderTask().execute();
+//                          adapter.notifyDataSetChanged();
+                    data = new ArrayList<>();
+                    for (int i = 0; i < 1; i++) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("orderId", orderId[i]);
+                        map.put("orderStatus", orderStatus[i]);
+                        map.put("orderTrainNo", orderTrainNo[i]);
+                        map.put("orderDateFrom", orderDateFrom[i]);
+                        map.put("orderStationFrom", orderStationFrom[i]);
+                        map.put("orderPrice", orderPrice[i]);
+                        map.put("orderFlag", orderFlag[i]);
+                        data.add(map);
+                        orderAdapter = new OrderAdapter(getActivity(),data);
+                        lvOrder.setAdapter(orderAdapter);
+                    }
+                    break;
+                case R.id.tv_order_all:
+                    tvWaitToPay.setBackgroundResource(0);
+                    tvAll.setBackgroundResource(R.drawable.cab_background_bottom_mainbar);
+                    for (int i = 0; i < orderId.length; i++) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("orderId", orderId[i]);
+                        map.put("orderStatus", orderStatus[i]);
+                        map.put("orderTrainNo", orderTrainNo[i]);
+                        map.put("orderDateFrom", orderDateFrom[i]);
+                        map.put("orderStationFrom", orderStationFrom[i]);
+                        map.put("orderPrice", orderPrice[i]);
+                        map.put("orderFlag", orderFlag[i]);
+                        data.add(map);
+                        orderAdapter = new OrderAdapter(getActivity(),data);
+                        lvOrder.setAdapter(orderAdapter);
+                    }
+                    break;
             }
         }
-        return text;
     }
+
 
 
     @Override

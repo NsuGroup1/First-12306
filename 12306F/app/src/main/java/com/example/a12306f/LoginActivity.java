@@ -61,6 +61,14 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent1 = new Intent(LoginActivity.this, ViewPagerActivity.class);
             startActivity(intent1);
         }
+//        cbLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (cbLogin.isChecked()) {
+//                    sharedPreferences.edit().putBoolean("ISCHECK", true).commit();
+//                }
+//            }
+//        });
 
         //用户名，密码验证
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -96,13 +104,5 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        cbLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (cbLogin.isChecked()) {
-                    sharedPreferences.edit().putBoolean("ISCHECK", true).commit();
-                }
-            }
-        });
     }
 }

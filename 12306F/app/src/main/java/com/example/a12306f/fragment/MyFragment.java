@@ -56,7 +56,9 @@ public class MyFragment extends Fragment {
         button_out_my.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), LoginActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -117,13 +119,6 @@ public class MyFragment extends Fragment {
 
             }
         });
-        button_out_my.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), LoginActivity.class);
-                startActivity(intent);
-            }
-        });
+
     }
 }

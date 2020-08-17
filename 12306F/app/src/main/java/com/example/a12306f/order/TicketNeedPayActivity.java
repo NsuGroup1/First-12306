@@ -89,10 +89,10 @@ public class TicketNeedPayActivity extends AppCompatActivity {
                     Toast.makeText(TicketNeedPayActivity.this,"当前网络不可用",Toast.LENGTH_SHORT).show();
                     return;
                 }
-//                progressDialog = ProgressDialog.show(TicketNeedPayActivity.this,
-//                        null,
-//                        "正在加载中....",
-//                        false,true);
+                progressDialog = ProgressDialog.show(TicketNeedPayActivity.this,
+                        null,
+                        "正在加载中....",
+                        false,true);
                 Intent intent = new Intent();
                 intent.setClass(TicketNeedPayActivity.this,TicketPayedSuccessActivity.class);
                 startActivity(intent);

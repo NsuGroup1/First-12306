@@ -15,22 +15,22 @@ import java.util.Map;
 
 public class OrderAdapter extends BaseAdapter {
     private Context context;
-    private List<Map<String,Object>> datalist;
+    private List<Map<String,Object>> data;
     private LayoutInflater inflater;
 
-    public OrderAdapter(Context context, List<Map<String,Object>> datalist){
+    public OrderAdapter(Context context, List<Map<String,Object>> data){
         this.context = context;
-        this.datalist = datalist;
+        this.data = data;
         inflater = LayoutInflater.from(context);
     }
     @Override
     public int getCount() {
-        return datalist.size();
+        return data.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return datalist.get(i);
+        return data.get(i);
     }
 
     @Override
@@ -48,27 +48,27 @@ public class OrderAdapter extends BaseAdapter {
             holder.tvOrderStatus = view.findViewById(R.id.tv_order_status);
             holder.tvOrderTrainNo = view.findViewById(R.id.tv_order_train_num);
             holder.tvOrderDateFrom = view.findViewById(R.id.tv_order_date);
-            holder.tvOrderStationFrom = view.findViewById(R.id.tv_start_city);
+            holder.tvOrderStation = view.findViewById(R.id.tv_order_station);
             holder.tvOrderPrice = view.findViewById(R.id.tv_order_price);
             holder.imgOrderFlag = view.findViewById(R.id.img_order_flag);
             view.setTag(holder);
         }else {
             holder = (ViewHolder) view.getTag();
         }
-        holder.tvOrderId.setText(datalist.get(i).get("orderId").toString());
-        holder.tvOrderStatus.setText(datalist.get(i).get("orderStatus").toString());
-        if ("未支付".equals(datalist.get(i).get("orderStatus").toString())){
+        holder.tvOrderId.setText(data.get(i).get("orderId").toString());
+        holder.tvOrderStatus.setText(data.get(i).get("orderStatus").toString());
+        if ("未支付".equals(data.get(i).get("orderStatus").toString())){
             holder.tvOrderStatus.setTextColor(context.getResources().getColor(android.R.color.holo_orange_light));
-        }else if ("已支付".equals(datalist.get(i).get("orderStatus").toString())){
+        }else if ("已支付".equals(data.get(i).get("orderStatus").toString())){
             holder.tvOrderStatus.setTextColor(context.getResources().getColor(R.color.colorAccent));
         }
-        holder.tvOrderTrainNo.setText(datalist.get(i).get("orderTrainNo").toString());
-        holder.tvOrderDateFrom.setText(datalist.get(i).get("orderDateFrom").toString());
-        holder.tvOrderStationFrom.setText(datalist.get(i).get("orderStationFrom").toString());
-        holder.tvOrderPrice.setText(datalist.get(i).get("orderPrice").toString());
+        holder.tvOrderTrainNo.setText(data.get(i).get("orderTrainNo").toString());
+        holder.tvOrderDateFrom.setText(data.get(i).get("orderDateFrom").toString());
+        holder.tvOrderStation.setText(data.get(i).get("orderStationFrom").toString());
+        holder.tvOrderPrice.setText(data.get(i).get("orderPrice").toString());
 
         //TODO 判断图片的显示
-        Integer resId = (Integer) datalist.get(i).get("orderFlag");
+        Integer resId = (Integer) data.get(i).get("orderFlag");
         if (resId == null){
             holder.imgOrderFlag.setImageDrawable(null);
         }else {
@@ -81,7 +81,7 @@ public class OrderAdapter extends BaseAdapter {
         TextView tvOrderStatus;
         TextView tvOrderTrainNo;
         TextView tvOrderDateFrom;
-        TextView tvOrderStationFrom;
+        TextView tvOrderStation;
         TextView tvOrderPrice;
         ImageView imgOrderFlag;
     }
