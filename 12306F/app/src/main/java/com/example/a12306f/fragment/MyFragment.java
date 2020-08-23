@@ -59,6 +59,8 @@ public class MyFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), LoginActivity.class);
                 startActivity(intent);
+                getActivity().finish();
+
             }
         });
 
@@ -73,7 +75,6 @@ public class MyFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
-
                     case 0:
                         intent.setClass(getActivity(), MyContactActivity.class);
                         startActivity(intent);

@@ -23,6 +23,9 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.code.gson:gson:2.8.6'
+    compile  'com.squareup.okhttp3:okhttp:3.4.1'
+
     implementation 'io.reactivex.rxjava2:rxjava:2.0.1'
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
 

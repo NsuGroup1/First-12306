@@ -16,6 +16,7 @@ import com.example.a12306f.ViewPagerActivity;
 import com.example.a12306f.a.Order;
 import com.example.a12306f.utils.NetworkUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -13,6 +13,9 @@ import com.example.a12306f.R;
 import com.example.a12306f.ViewPagerActivity;
 import com.example.a12306f.a.Order;
 import com.example.a12306f.utils.ZxingUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 //import com.example.a12306f.utils.ZxingUtils;
 
 public class TicketPayedSuccessActivity extends AppCompatActivity {
@@ -27,7 +30,9 @@ public class TicketPayedSuccessActivity extends AppCompatActivity {
         imageView = findViewById(R.id.ewm);
         back = findViewById(R.id.ticket_success_back);
 
+
         //创建二维码
+        Map<String,Object> contact = (HashMap<String, Object>) getIntent().getSerializableExtra("row");
         Order order = (Order) getIntent().getSerializableExtra("order");
         ZxingUtils.createQRImage(
 //                order.getId() + "," + order.getTrain().getTrainNo() + "," +

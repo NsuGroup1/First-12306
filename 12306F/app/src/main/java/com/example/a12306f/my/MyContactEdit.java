@@ -52,7 +52,7 @@ public class MyContactEdit extends AppCompatActivity {
         myContactEdit = findViewById(R.id.lv_mycontact_edit_list);
         btn_Save = findViewById(R.id.contact_edit_save);
 
-        //TODO 获取上个页面传来的数据
+        //获取传来的数据
         Intent intent = getIntent();
         Map<String,Object> contact = (HashMap<String, Object>) getIntent().getSerializableExtra("row");
 
@@ -67,7 +67,7 @@ public class MyContactEdit extends AppCompatActivity {
         data.add(map1);
 
         Map<String,Object> map2 = new HashMap<>();
-        String idType = "身份证";
+        String idType = (String) contact.get("idType");
         map2.put("k1","证件类型");
         //以冒号进行分割，取第一段
         map2.put("k2",idType.split("\\:")[0]);
@@ -75,7 +75,7 @@ public class MyContactEdit extends AppCompatActivity {
         data.add(map2);
 
         Map<String,Object> map3 = new HashMap<>();
-        String idCard = (String) contact.get("idCard");
+        String idCard = (String) contact.get("id");
         map3.put("k1","证件号码");
         //以冒号进行分割，取第一段
         map3.put("k2",idCard);
@@ -83,7 +83,7 @@ public class MyContactEdit extends AppCompatActivity {
         data.add(map3);
 
         Map<String,Object> map4 = new HashMap<>();
-        String age = (String) contact.get("name");
+        String age = (String) contact.get("type");
         map4.put("k1","乘客类型");
         map4.put("k2",age.split("\\(")[1].split("\\)")[0]);
         map4.put("k3",R.drawable.forward_25);
