@@ -81,7 +81,7 @@ public class MyContactActivity extends AppCompatActivity {
                         //
                         map.put("name",passenger.getName());
                         map.put("type","("+passenger.getType()+")");
-                        map.put("idType",passenger.getIdType());
+                        map.put("idType",passenger.getIdType()+"：");
                         map.put("id",passenger.getId());
                         map.put("tel",passenger.getTel());
                         data.add(map);
