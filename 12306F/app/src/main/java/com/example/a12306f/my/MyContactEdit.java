@@ -1,11 +1,17 @@
 package com.example.a12306f.my;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,18 +20,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.a12306f.R;
+import com.example.a12306f.a.Passenger;
+import com.example.a12306f.utils.Constant;
 import com.example.a12306f.utils.DialogClose;
+import com.example.a12306f.utils.Md5Utils;
+import com.example.a12306f.utils.NetworkUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MyContactEdit extends AppCompatActivity {
 
@@ -34,7 +56,62 @@ public class MyContactEdit extends AppCompatActivity {
     private SimpleAdapter adapter;
     private List<Map<String,Object>> data;
     private ProgressDialog progressDialog;
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            if (progressDialog != null){
+                progressDialog.dismiss();
+            }
+            switch (msg.what){
+                case 1:
+                    String result = msg.obj.toString();
+                    if ("1".equals(result)){
+                        Toast.makeText(MyContactEdit.this,"修改成功！",Toast.LENGTH_SHORT).show();
+                        MyContactEdit.this.finish();
 
+                    }else if ("-1".equals(result)){
+                        Toast.makeText(MyContactEdit.this,"修改失败！",Toast.LENGTH_SHORT).show();
+                        MyContactEdit.this.finish();
+                    }
+                    break;
+                case 2:
+                    Toast.makeText(MyContactEdit.this,"服务器错误，请重试！",Toast.LENGTH_SHORT).show();
+                    break;
+                case 3:
+                    Toast.makeText(MyContactEdit.this,"请重新登录！",Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+//    @SuppressLint("HandlerLeak")
+//    private Handler handler1 = new Handler(){
+//        @Override
+//        public void handleMessage(@NonNull Message msg) {
+//            if (progressDialog != null){
+//                progressDialog.dismiss();
+//            }
+//            switch (msg.what){
+//                case 1:
+//                    String result = msg.obj.toString();
+//                    if ("1".equals(result)){
+//                        Toast.makeText(MyContactEdit.this,"删除成功！",Toast.LENGTH_SHORT).show();
+//                        MyContactEdit.this.finish();
+//
+//                    }else if ("-1".equals(result)){
+//                        Toast.makeText(MyContactEdit.this,"删除失败！",Toast.LENGTH_SHORT).show();
+//                        MyContactEdit.this.finish();
+//                    }
+//                    break;
+//                case 2:
+//                    Toast.makeText(MyContactEdit.this,"服务器错误，请重试！",Toast.LENGTH_SHORT).show();
+//                    break;
+//                case 3:
+//                    Toast.makeText(MyContactEdit.this,"请重新登录！",Toast.LENGTH_SHORT).show();
+//                    break;
+//            }
+//        }
+//    };
     String[] k1 = {"姓名","证件类型","证件号码","乘客类型","手机号"};
     String[] k2 = {""};
     Integer[] k3 = {R.drawable.forward_25};
@@ -199,10 +276,67 @@ public class MyContactEdit extends AppCompatActivity {
         btn_Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyContactEdit.this, MyContactActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                if (!NetworkUtils.checkNet(MyContactEdit.this)){
+                    Toast.makeText(MyContactEdit.this,"当前网络不可用",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+//                progressDialog = ProgressDialog.show(
+//                        MyContactEdit
+//                                .this,
+//                        null,
+//                        "正在加载中....",
+//                        false,true);
+                new Thread(){
+                    @Override
+                    public void run() {
+                        Message message = handler.obtainMessage();
+                        String action = "update";
+
+                        SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+                        String sessionid = sharedPreferences.getString("Cookie", "");
+
+                        OkHttpClient client = new OkHttpClient();
+                        RequestBody requestBody = new FormBody.Builder()
+                                .add("姓名", data.get(0).get("k2").toString())
+                                .add("证件类型", data.get(1).get("k2").toString())
+                                .add("证件号码",data.get(2).get("k2").toString())
+                                .add("乘客类型",data.get(3).get("k2").toString())
+                                .add("电话",data.get(4).get("k2").toString())
+                                .add("action",action)
+                                .build();
+                        Request request = new Request.Builder()
+                                .url(Constant.Host + "/otn/Passenger")
+                                .addHeader("Cookie", sessionid)
+                                .post(requestBody)
+                                .build();
+
+                        try {
+                            Response response = client.newCall(request).execute();
+                            String responseData = response.body().string();
+                            Log.d("MyContactEdit", "获取的服务器数据： " + responseData);
+                            if (response.isSuccessful()) {
+                                Gson gson = new GsonBuilder().create();
+                                String resultString = gson.fromJson(responseData,String.class);
+                                Log.d("MyContactEdit", "result" + resultString);
+                                message.what = 1;
+                                message.obj = resultString;
+                            } else {
+                                message.what = 2;
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }catch (JsonSyntaxException e) {
+                            e.printStackTrace();
+                            message.what = 3;
+                        }
+                        handler.sendMessage(message);
+                    }
+                }.start();
+
+//                Intent intent = new Intent(MyContactEdit.this, MyContactActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+//                finish();
             }
         });
     }
@@ -217,8 +351,60 @@ public class MyContactEdit extends AppCompatActivity {
     public boolean onOptionsItemSelected( MenuItem item) {
         switch (item.getItemId()){
             case R.id.my_contact_delete:
-                startActivity(new Intent(MyContactEdit.this,MyContactActivity.class));
-                break;
+//                progressDialog = ProgressDialog.show(
+//                        MyContactEdit
+//                                .this,
+//                        null,
+//                        "正在加载中....",
+//                        false,true);
+//                new Thread(){
+//                    @Override
+//                    public void run() {
+//                        Message message = handler1.obtainMessage();
+//                        String action = "remove";
+//
+//                        SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+//                        String sessionid = sharedPreferences.getString("Cookie", "");
+//
+//                        OkHttpClient client = new OkHttpClient();
+//                        RequestBody requestBody = new FormBody.Builder()
+//                                .add("姓名", data.get(0).get("k2").toString())
+//                                .add("证件类型", data.get(1).get("k2").toString())
+//                                .add("证件号码",data.get(2).get("k2").toString())
+//                                .add("乘客类型",data.get(3).get("k2").toString())
+//                                .add("电话",data.get(4).get("k2").toString())
+//                                .add("action",action)
+//                                .build();
+//                        Request request = new Request.Builder()
+//                                .url(Constant.Host + "/otn/Passenger")
+//                                .addHeader("Cookie", sessionid)
+//                                .post(requestBody)
+//                                .build();
+//
+//                        try {
+//                            Response response = client.newCall(request).execute();
+//                            String responseData = response.body().string();
+//                            Log.d("MyContactEdit", "获取的服务器数据： " + responseData);
+//                            if (response.isSuccessful()) {
+//                                Gson gson = new GsonBuilder().create();
+//                                String resultString = gson.fromJson(responseData,String.class);
+//                                Log.d("MyContactEdit", "result" + resultString);
+//                                message.what = 1;
+//                                message.obj = resultString;
+//                            } else {
+//                                message.what = 2;
+//                            }
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }catch (JsonSyntaxException e) {
+//                            e.printStackTrace();
+//                            message.what = 3;
+//                        }
+//                        handler.sendMessage(message);
+//                    }
+//                }.start();
+////                startActivity(new Intent(MyContactEdit.this,MyContactActivity.class));
+//                break;
         }
         return super.onOptionsItemSelected(item);
     }
