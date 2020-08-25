@@ -2,20 +2,28 @@ package com.example.a12306f.my;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -39,6 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Phaser;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -65,6 +74,14 @@ public class MyContactAdd extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    private ContentResolver contentResolver;
+    private ListView listView_dialog;
+    private List<String> mContactsName = new ArrayList<>();
+    private List<String> mContactsPhone = new ArrayList<>();
+    private SimpleAdapter searchAdapter;
+    private List<HashMap<String,Object>> searchData;
+    private String[] value_search;
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
@@ -72,16 +89,85 @@ public class MyContactAdd extends AppCompatActivity {
                 finish();
                 break;
             case R.id.my_contact_search:
-                TextView TV_search = new TextView(MyContactAdd.this);
+                contentResolver = getContentResolver();
+                listView_dialog = findViewById(R.id.lv_AMC_dialog_search);
+                searchAdapter = new SimpleAdapter(this,searchData,R.layout.lv_search_dialog_mca,
+                        new String[]{"name","number"},new int[]{R.id.TV_name_search,R.id.TV_phone_search});
+                listView_dialog.setAdapter(searchAdapter);
+                listView_dialog.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String name_lv = searchData.get(position).get("name").toString();
+                        String phone = searchData.get(position).get("number").toString();
+                        value_search= new String[]{name_lv, " ", " ", " ", phone};
+                        for (int i = 0;i<value_search.length;i++){
+                            HashMap map_search = new HashMap();
+                            map_search.put("k2",value_search[i]);
+                            data.add(map_search);
+                        }
+                    }
+                });
+
+//                Uri uri = Uri.parse("content://com.android.contacts/raw_contacts");
+//                Cursor cursor = contentResolver.query(uri,null,null,null,null);
+//                while (cursor.moveToNext()){
+//                    int id =cursor.getInt(cursor.getColumnIndex("_id"));
+//                    String name = cursor.getString(cursor.getColumnIndex("display_name"));
+//                    Log.i("test",id+" "+name);
+//
+//                    Uri uriData = Uri.parse("content://com.android.contacts/raw_contacts/"+id+"/data");
+//                    Cursor cursorData = contentResolver.query(uriData,null,null,null,null);
+//
+//                    while (cursorData.moveToNext()){
+//                        String data1 = cursorData.getString(cursorData.getColumnIndex("data1"));
+//                        String type = cursorData.getString(cursorData.getColumnIndex("mimetype"));
+//                        Log.i("test"," "+data1+":"+type);
+//                        mContactsName.add(name);
+//                        mContactsPhone.add(data1);
+//                    }
+//                }/
+
+                //获取联系人
+                Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
+                        new String[]{"_id","display_name"},null,null,null);
+
+                while (cursor.moveToNext()){
+                    HashMap map1 = new HashMap();
+                    int _id = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                    String display_name = cursor.getString(cursor.getColumnIndex("display_name"));
+                    Log.d("My12306",_id+","+display_name);
+                    map1.put("name",display_name);
+//                    mContactsName.add(display_name);
+                    Cursor cursor2 = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID+"="+_id,
+                            new String[]{_id+""},null);//传入联系人_id
+                    //获取电话
+                    String number = null;
+                    while (cursor2.moveToNext()){
+                        number = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+//                        mContactsPhone.add(number);
+                        map1.put("number",number);
+                    }
+                    cursor2.close();
+                    searchData.add(map1);
+                }
+                cursor.close();
+
+                View searchView = getLayoutInflater().inflate(R.layout.dialog_mycontact_search,null);
+
                 new AlertDialog.Builder(MyContactAdd.this)
                         .setTitle("请选择")
-                        .setView(TV_search)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
+                        .setView(searchView)
+//                        .setAdapter(new SearchAdapter(), new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+////                                String[] value ={}
+////                                Map map2 = new HashMap();
+////                                map2.put("k2",mContacts.get(which));
+////                                data.add(map2);
+//
+//                            }
+//                        })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -91,6 +177,34 @@ public class MyContactAdd extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+//    class SearchAdapter extends BaseAdapter{
+//        private TextView tv_name,tv_phone;
+//
+//        @Override
+//        public int getCount() {
+//            return mContactsName.size();
+//        }
+//
+//        @Override
+//        public Object getItem(int position) {
+//            return position;
+//        }
+//
+//        @Override
+//        public long getItemId(int position) {
+//            return position;
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            View view = getLayoutInflater().inflate(R.layout.lv_search_dialog_mca,null);
+//            tv_name = view.findViewById(R.id.TV_name_search);
+//            tv_phone = view.findViewById(R.id.TV_phone_search);
+//            tv_name.setText(mContactsName.get(position));
+//            tv_phone.setText(mContactsPhone.get(position));
+//            return view;
+//        }
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +215,6 @@ public class MyContactAdd extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
 
-
-
         myContactAdd = findViewById(R.id.lv_my_contact_add);
         btn_Save = findViewById(R.id.contact_add_save);
 
@@ -110,9 +222,9 @@ public class MyContactAdd extends AppCompatActivity {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
-//                if (progressDialog != null){
-//                    progressDialog.dismiss();
-//                }
+                if (progressDialog != null){
+                    progressDialog.dismiss();
+                }
                 switch (msg.what){
                     case 1:
                         String result = msg.obj.toString();
@@ -137,8 +249,8 @@ public class MyContactAdd extends AppCompatActivity {
                     Toast.makeText(MyContactAdd.this,"当前网络不可用",Toast.LENGTH_LONG).show();
                     return;
                 }
-//                progressDialog = progressDialog.show(MyContactAdd.this,null,"正在加载中..."
-//                ,false,true);
+                progressDialog = progressDialog.show(MyContactAdd.this,null,"正在加载中..."
+                ,false,true);
                 new Thread(){
                     @Override
                     public void run() {
@@ -188,7 +300,6 @@ public class MyContactAdd extends AppCompatActivity {
 //        Map<String,Object> contact = (HashMap<String, Object>) getIntent().getSerializableExtra("row");
 
         data = new ArrayList<Map<String, Object>>();
-
 
 //        String name = (String) contact.get("name");
 //        String name = "";
