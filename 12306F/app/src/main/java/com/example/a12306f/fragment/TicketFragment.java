@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,19 +43,6 @@ public class TicketFragment extends Fragment {
 
     private String stationFrom,stationTo;
 
-
-//    private void getPermissions() {
-//        RxPermissions rxPermissions = new RxPermissions(getActivity());
-//        rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE,
-//                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                .subscribe(granted -> {
-//                    if (granted) {
-//                        Toast.makeText(getContext(), "已经获取所需权限", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(getContext(), "未能获取所需权限", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
 private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             "android.permission.READ_EXTERNAL_STORAGE",
@@ -87,12 +75,6 @@ private static final int REQUEST_EXTERNAL_STORAGE = 1;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        final Calendar oldCalendar = Calendar.getInstance();
-        final int oldYear = oldCalendar.get(Calendar.YEAR);
-        final int oldMonth = oldCalendar.get(Calendar.MONTH);
-        final int oldDay = oldCalendar.get(Calendar.DATE);
-        String oldWeekDay = DateUtils.formatDateTime(getActivity(),oldCalendar.getTimeInMillis(),DateUtils.FORMAT_SHOW_WEEKDAY);
 
         tv_start_city = view.findViewById(R.id.tv_start_city);
         tv_arrive_city = view.findViewById(R.id.tv_arrive_city);
@@ -173,7 +155,15 @@ private static final int REQUEST_EXTERNAL_STORAGE = 1;
             }
         });
 
-        tv_time.setText(oldYear+"-"+(oldMonth+1)+"-"+oldDay+" "+oldWeekDay);
+
+        final Calendar oldCalendar = Calendar.getInstance();
+        final int Year = oldCalendar.get(Calendar.YEAR);
+        final int Month = oldCalendar.get(Calendar.MONTH);
+        final int Day = oldCalendar.get(Calendar.DATE);
+        String Week = DateUtils.formatDateTime(getActivity(),oldCalendar.getTimeInMillis(),DateUtils.FORMAT_SHOW_WEEKDAY);
+        Log.d("getActivity.this", "Week: "+Week);
+
+        tv_time.setText(Year+"-"+(Month+1)+"-"+Day+" "+Week);
         //TODO 日期选择对话框
         tv_time.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,14 +171,18 @@ private static final int REQUEST_EXTERNAL_STORAGE = 1;
                 new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+
                         Calendar newCalendar = Calendar.getInstance();
                         newCalendar.set(year,month,day);
-                        String weekDay = DateUtils.formatDateTime(getActivity(),oldCalendar.getTimeInMillis(),DateUtils.FORMAT_SHOW_WEEKDAY);
+                        String weekDay = DateUtils.formatDateTime(getActivity(),newCalendar.getTimeInMillis(),DateUtils.FORMAT_SHOW_WEEKDAY);
                         tv_time.setText(year+"-"+(month+1)+"-"+day+" "+weekDay);
+                        Log.d("getActivity.this",weekDay);
                     }
-                },oldYear,oldMonth,oldDay).show();
+                },Year,Month,Day).show();
             }
         });
+
+        //查询按钮
         btn_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

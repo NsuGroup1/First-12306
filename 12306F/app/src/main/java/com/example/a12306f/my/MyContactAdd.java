@@ -2,27 +2,50 @@ package com.example.a12306f.my;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.a12306f.R;
+import com.example.a12306f.utils.Constant;
 import com.example.a12306f.utils.DialogClose;
+import com.example.a12306f.utils.NetworkUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MyContactAdd extends AppCompatActivity {
 
@@ -31,6 +54,30 @@ public class MyContactAdd extends AppCompatActivity {
     private SimpleAdapter adapter;
     private List<Map<String,Object>> data;
     private ProgressDialog progressDialog;
+    final private String TAG = "MyContactAddActivity";
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+//                if (progressDialog != null){
+//                    progressDialog.dismiss();
+//                }
+            switch (msg.what){
+                case 1:
+                    String result = msg.obj.toString();
+                    if ("1".equals(result)){
+                        Toast.makeText(MyContactAdd.this,"保存成功!",Toast.LENGTH_LONG).show();
+                        MyContactAdd.this.finish();
+                    }else if ("-1".equals(result)){
+                        Toast.makeText(MyContactAdd.this,"保存失败!",Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                case 2:
+                    Toast.makeText(MyContactAdd.this,"服务器错误!",Toast.LENGTH_LONG).show();
+            }
+        }
+    };
 
     String[] k1 = {"姓名","证件类型","证件号码","乘客类型","手机号"};
     String[] k2 = {""};
@@ -43,7 +90,59 @@ public class MyContactAdd extends AppCompatActivity {
 
         myContactAdd = findViewById(R.id.lv_my_contact_add);
         btn_Save = findViewById(R.id.contact_add_save);
-
+        //保存点击事件
+        btn_Save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!NetworkUtils.checkNet(MyContactAdd.this)){
+                    Toast.makeText(MyContactAdd.this,"当前网络不可用",Toast.LENGTH_LONG).show();
+                    return;
+                }
+//                progressDialog = progressDialog.show(MyContactAdd.this,null,"正在加载中..."
+//                ,false,true);
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        Message msg = handler.obtainMessage();
+                        SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+                        String sessionid = sharedPreferences.getString("Cookie", "");
+                        Log.d(TAG, "sessionid： " + sessionid);
+                        OkHttpClient okHttpClient = new OkHttpClient();
+                        RequestBody requestBody = new FormBody.Builder()
+                                .add("姓名",data.get(0).get("k2").toString())
+                                .add("证件类型",data.get(1).get("k2").toString())
+                                .add("证件号码",data.get(2).get("k2").toString())
+                                .add("乘客类型",data.get(3).get("k2").toString())
+                                .add("电话",data.get(4).get("k2").toString())
+                                .add("action","new")
+                                .build();
+                        Request request = new Request.Builder()
+                                .url(Constant.Host + "/otn/Passenger")
+                                .addHeader("Cookie", sessionid)
+                                .post(requestBody)
+                                .build();
+                        try {
+                            Response response = okHttpClient.newCall(request).execute();
+                            String responseData = response.body().string();
+                            Log.d(TAG, "获取的服务器数据： " + responseData);
+                            if (response.isSuccessful()){
+                                Gson gson = new GsonBuilder().create();
+                                String result = gson.fromJson(responseData,String.class);
+                                msg.what = 1;
+                                msg.obj = result;
+                            }else {
+                                msg.what = 2;
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            msg.what = 2;
+                        }
+                        handler.sendMessage(msg);
+                    }
+                }.start();
+            }
+        });
         //TODO 获取上个页面传来的数据
         Intent intent = getIntent();
 //        Map<String,Object> contact = (HashMap<String, Object>) getIntent().getSerializableExtra("row");
@@ -106,7 +205,7 @@ public class MyContactAdd extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 switch(position){
                     case 0:
-                        final EditText editName = new EditText(MyContactAdd.this);
+                        final TextView editName = new EditText(MyContactAdd.this);
                         editName.setText((String) data.get(position).get("k2"));
                         new AlertDialog.Builder(MyContactAdd.this)
                                 .setIcon(android.R.drawable.ic_dialog_info)
@@ -148,7 +247,7 @@ public class MyContactAdd extends AppCompatActivity {
                                             adapter.notifyDataSetChanged();
                                         }
                                     })
-                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    .setNegativeButton("确定", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -243,5 +342,32 @@ public class MyContactAdd extends AppCompatActivity {
                 }
             }
         });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.my_contact_search,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.my_contact_search:
+
+                TextView TV_search = new TextView(MyContactAdd.this);
+                new AlertDialog.Builder(MyContactAdd.this)
+                        .setTitle("请选择")
+                        .setView(TV_search)
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).create().show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
