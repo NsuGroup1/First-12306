@@ -1,8 +1,12 @@
 package com.example.a12306f.my;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.wifi.aware.PublishConfig;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +14,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Xml;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -18,14 +23,20 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.a12306f.R;
 import com.example.a12306f.a.Account;
+import com.example.a12306f.a.Passenger;
 import com.example.a12306f.utils.Constant;
 import com.example.a12306f.utils.DialogClose;
 import com.example.a12306f.utils.Md5Utils;
 import com.example.a12306f.utils.NetworkUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 
 import org.json.JSONException;
@@ -58,12 +69,13 @@ public class MyAccountActivity extends AppCompatActivity {
     private String action = "";
     private static final String TAG = "MyAccountActivity";
 
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            if (progressDialog != null){
-                progressDialog.dismiss();
-            }
+//            if (progressDialog != null){
+//                progressDialog.dismiss();
+//            }
             switch (msg.what){
                 case 1:
                     data.clear();
@@ -109,18 +121,20 @@ public class MyAccountActivity extends AppCompatActivity {
             }
         }
     };
+    @SuppressLint("HandlerLeak")
     private Handler handler1 = new Handler(){
         @Override
         public void handleMessage(Message message) {
             super.handleMessage(message);
-            if (progressDialog != null){
-                progressDialog.dismiss();
-            }
+//            if (progressDialog != null){
+//                progressDialog.dismiss();
+//            }
             switch (message.what){
                 case 1:
                     String result = message.obj.toString();
                     Log.d("result",result);
                     Toast.makeText(MyAccountActivity.this,"修改成功！",Toast.LENGTH_SHORT).show();
+                    MyAccountActivity.this.finish();
                     break;
                 case 2:
                     Toast.makeText(MyAccountActivity.this,"修改失败！",Toast.LENGTH_SHORT).show();
@@ -128,16 +142,24 @@ public class MyAccountActivity extends AppCompatActivity {
             }
         }
     };
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
-
+        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setLogo(R.mipmap.ic_launcher);
+//        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setLogo(R.mipmap.ic_launcher);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
 
         myAccountlist = findViewById(R.id.lv_account);
         btn_myAccountSave = findViewById(R.id.my_account_save);
 
-        data = new ArrayList<Map<String, Object>>();
+        data = new ArrayList<>();
 //        String[] key1 = {"用户名","姓名","证件类型","证件号码","乘客类型","电话"};
 //        String[] key2 = {"dong","冬不拉","身份证","11010119910511947X","成人","13812345678"};
 //        Integer[] key3 = {R.drawable.flg_null,R.drawable.flg_null,R.drawable.flg_null,R.drawable.flg_null,R.drawable.forward_25,R.drawable.forward_25};
@@ -149,7 +171,7 @@ public class MyAccountActivity extends AppCompatActivity {
 //            data.add(map);
 //        }
 
-        simpleAdapter = new SimpleAdapter(this,
+         simpleAdapter = new SimpleAdapter(this,
                 data,
                 R.layout.item_my_contact_edit,
                 new String[]{"key","value","img"},
@@ -216,6 +238,7 @@ public class MyAccountActivity extends AppCompatActivity {
                 }
             }
         });
+//保存修改
         btn_myAccountSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,24 +246,32 @@ public class MyAccountActivity extends AppCompatActivity {
                     Toast.makeText(MyAccountActivity.this,"当前网络不可用",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                progressDialog = ProgressDialog.show(
-                        MyAccountActivity.this,
-                        null,
-                        "正在加载中....",
-                        false,true);
+//                progressDialog = ProgressDialog.show(
+//                        MyAccountActivity.this,
+//                        null,
+//                        "正在加载中....",
+//                        false,true);
                 new Thread(){
                     @Override
                     public void run() {
+                        SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+                        String sessionid = sharedPreferences.getString("Cookie", "");
+
                         String result = "";
                         Message message = handler1.obtainMessage();
                         OkHttpClient client = new OkHttpClient();
                         RequestBody requestBody = new FormBody.Builder()
-                                .add("乘客类型",data.get(4).get("myAccountlist").toString())
-                                .add("电话", Md5Utils.MD5(data.get(5).get("myAccountlist").toString()))
+                                .add("用户名",data.get(0).get("value").toString())
+                                .add("姓名",data.get(1).get("value").toString())
+                                .add("证件类型",data.get(2).get("value").toString())
+                                .add("证件号码",data.get(3).get("value").toString())
+                                .add("乘客类型",data.get(4).get("value").toString())
+                                .add("电话", data.get(5).get("value").toString())
                                 .add("action","update")
                                 .build();
                         Request request = new Request.Builder()
                                 .url(Constant.Host+"/otn/Account")
+                                .addHeader("Cookie", sessionid)
                                 .post(requestBody)
                                 .build();
                         try {
@@ -251,34 +282,17 @@ public class MyAccountActivity extends AppCompatActivity {
 
                             //解析成功接收到的数据
                             if (response.isSuccessful()) {
-                                //pull解析
-                                //生成解析器
-                                JSONObject jsonObject = new JSONObject();
-
-                                String type = jsonObject.getString("type");
-                                String tel = jsonObject.getString("tel");
-
+                                //解析Json
+                                Gson gson = new GsonBuilder().create();
+                                Account account = gson.fromJson(responsedata,Account.class);
                                 message.what = 1;
+                                message.obj=account;
                             }
-//                            else {
-
-//                                //读取sessionid
-//                                Headers headers = response.headers();
-//                                Log.d(TAG,"headers:"+headers);
-//                                List<String> cookies = headers.values("Set-Cookie");
-//                                Log.d(TAG,"Set-Cookie:"+cookies);
-//                                String session = cookies.get(0);
-//                                Log.d(TAG,"onResponse-size:"+cookies);
-//                                String sessionid = session.substring(0,session.indexOf(";"));
-//                                Log.d(TAG,"session is:"+sessionid);
-//                                //发送消息
-//                                message.what = 1;
-//                        }
                              else {
                                 message.what = 2;
                                 Log.d(TAG,"what2:");
                             }
-                        } catch (IOException | JSONException e) {
+                        } catch (IOException e) {
                             e.printStackTrace();
                             message.what = 2;
                             Log.d(TAG,"what2:");
@@ -289,5 +303,78 @@ public class MyAccountActivity extends AppCompatActivity {
                 }.start();
             }
         });
+    }
+
+    //查询显示
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!NetworkUtils.checkNet(MyAccountActivity.this)){
+            Toast.makeText(MyAccountActivity.this,"当前网络不可用",Toast.LENGTH_SHORT).show();
+            return;
+        }
+//        progressDialog = ProgressDialog.show(MyAccountActivity.this,
+//                null,
+//                "正在加载中....",
+//                false,true);
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Message message = handler.obtainMessage();
+                String action = "query";
+                SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+                String sessionid = sharedPreferences.getString("Cookie", "");
+                Log.d(TAG, "sessionid： " + sessionid);
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    RequestBody requestBody = new  FormBody.Builder()
+                            .add("action",action)
+                            .build();
+                    Request request = new Request.Builder()
+                            .url(Constant.Host + "/otn/Account")
+                            .addHeader("Cookie", sessionid)
+                            .post(requestBody)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    String responseData = response.body().string();
+                    Log.d(TAG, "获取的服务器数据： " + responseData);
+
+                    if (response.isSuccessful()) {
+                        Gson gson = new GsonBuilder().create();
+
+                        Account accounts = gson.fromJson(responseData,Account.class);
+                        Log.d(TAG, "accounts： " + accounts);
+                        message.what = 1;
+                        message.obj = accounts;
+                    } else {
+                        message.what = 2;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    message.what = 2;
+                }catch (JsonSyntaxException e) {
+                    e.printStackTrace();
+                    message.what = 3;
+                }
+            handler.sendMessage(message);
+            }
+        }.start();
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.my_contact_add:
+                Intent intent = new Intent();
+                intent.setClass(MyAccountActivity.this,MyContactAdd.class);
+                startActivity(intent);
+                break;
+            case android.R.id.home:
+                finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

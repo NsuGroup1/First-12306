@@ -9,17 +9,20 @@
     <TextView
         android:id="@+id/tv_my_contact_edit_key"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_height="44dp"
         android:text="姓名"
-        />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="20sp"
+        android:gravity="center"/>
     <TextView
         android:id="@+id/tv_my_contact_edit_value"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:layout_weight="1"
-        android:gravity="right"
+        android:gravity="center|right"
         android:text="lm"
+        android:textSize="20sp"
+
         android:textAppearance="?android:attr/textAppearanceMedium"
 
         />
@@ -27,7 +30,7 @@
     <ImageView
         android:id="@+id/img_my_contact_edit_flag"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:src="@drawable/forward_25" />
 
 </LinearLayout>
