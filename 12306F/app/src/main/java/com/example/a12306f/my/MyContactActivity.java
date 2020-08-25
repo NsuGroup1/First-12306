@@ -108,6 +108,7 @@ public class MyContactActivity extends AppCompatActivity {
 
         actionBar.setLogo(R.mipmap.ic_launcher);
         actionBar.setDisplayHomeAsUpEnabled(true);
+
         actionBar.setDisplayUseLogoEnabled(true);
 
         //显示联系人
