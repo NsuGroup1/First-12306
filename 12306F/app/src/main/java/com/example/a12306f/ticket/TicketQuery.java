@@ -28,7 +28,7 @@ public class TicketQuery extends AppCompatActivity {
     private TextView tv_dateTitle;
     private TextView tv_stationTitle;
     private ListView lv_TicketInformationList;
-    private List<Map<String, Object>> data;
+    private List<Map<String, Object>> data,orderData;
     private SimpleAdapter queryAdapter;
     private ProgressDialog progressDialog;
 
@@ -95,7 +95,10 @@ public class TicketQuery extends AppCompatActivity {
 //                String arrivaltime = map.get("toTime");
 //                String seat1 = map.get("seat1");
 
+                orderData = new ArrayList<>();//将data里面seat有关书籍放进orderData里面
+
                 Bundle bundle = new Bundle();
+//                bundle.putSerializable("orderData",orderData.get(position).get());
                 bundle.putString("date",tv_dateTitle.getText().toString());
                 bundle.putString("route",tv_stationTitle.getText().toString());
                 bundle.putString("lieche",data.get(position).get("trainNo").toString());
@@ -110,6 +113,7 @@ public class TicketQuery extends AppCompatActivity {
         });
     }
 
+    //前一天后一天的实现
     private class MyTicketListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
@@ -122,6 +126,7 @@ public class TicketQuery extends AppCompatActivity {
             switch (view.getId()) {
                 case R.id.tv_previousDay:
                     calendar.add(Calendar.DAY_OF_MONTH, -1);
+
                     break;
                 case R.id.tv_afterDay:
                     calendar.add(Calendar.DAY_OF_MONTH, 1);
