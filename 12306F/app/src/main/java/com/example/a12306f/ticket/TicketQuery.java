@@ -236,7 +236,7 @@ public class TicketQuery extends AppCompatActivity {
             String sessionid = sharedPreferences.getString("Cookie", "");
             Log.d(TAG, "sessionid： " + sessionid);
             OkHttpClient okHttpClient = new OkHttpClient();
-            RequestBody requestBody = new FormBody.Builder()
+            @SuppressLint("WrongThread") RequestBody requestBody = new FormBody.Builder()
                     .add("fromStationName", getIntent().getStringExtra("stationFrom"))
                     .add("toStationName", getIntent().getStringExtra("stationTo"))
                     .add("startTrainDate", tv_dateTitle.getText().toString().split(" ")[0])

@@ -158,7 +158,7 @@ public class YuDing02 extends AppCompatActivity {
             String sessionid = sharedPreferences.getString("Cookie", "");
             Log.d(TAG, "sessionid： " + sessionid);
             OkHttpClient okHttpClient = new OkHttpClient();
-             RequestBody requestBody = new FormBody.Builder()
+             @SuppressLint("WrongThread") RequestBody requestBody = new FormBody.Builder()
                     .add("fromStationName", StationTitle.getText().toString().split("-")[0])
                     .add("toStationName", StationTitle.getText().toString().split("-")[1])
                     .add("startTrainDate", DateTitle.getText().toString().split(" ")[0])
