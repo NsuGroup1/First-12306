@@ -78,8 +78,8 @@ public class MyContactAdd extends AppCompatActivity {
 
     private ContentResolver contentResolver;
     private ListView listView_dialog;
-    private List<String> mContactsName = new ArrayList<>();
-    private List<String> mContactsPhone = new ArrayList<>();
+//    private List<String> mContactsName = new ArrayList<>();
+//    private List<String> mContactsPhone = new ArrayList<>();
     private SimpleAdapter searchAdapter;
     private List<HashMap<String,Object>> searchData;
     private String[] value_search;
@@ -252,49 +252,54 @@ public class MyContactAdd extends AppCompatActivity {
                     Toast.makeText(MyContactAdd.this,"当前网络不可用",Toast.LENGTH_LONG).show();
                     return;
                 }
-                progressDialog = progressDialog.show(MyContactAdd.this,null,"正在加载中..."
-                ,false,true);
-                new Thread(){
-                    @Override
-                    public void run() {
-                        super.run();
-                        Message msg = handler.obtainMessage();
-                        SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
-                        String sessionid = sharedPreferences.getString("Cookie", "");
-                        Log.d(TAG, "sessionid： " + sessionid);
-                        OkHttpClient okHttpClient = new OkHttpClient();
-                        RequestBody requestBody = new FormBody.Builder()
-                                .add("姓名",data.get(0).get("k2").toString())
-                                .add("证件类型",data.get(1).get("k2").toString())
-                                .add("证件号码",data.get(2).get("k2").toString())
-                                .add("乘客类型",data.get(3).get("k2").toString())
-                                .add("电话",data.get(4).get("k2").toString())
-                                .add("action","new")
-                                .build();
-                        Request request = new Request.Builder()
-                                .url(Constant.Host + "/otn/Passenger")
-                                .addHeader("Cookie", sessionid)
-                                .post(requestBody)
-                                .build();
-                        try {
-                            Response response = okHttpClient.newCall(request).execute();
-                            String responseData = response.body().string();
-                            Log.d(TAG, "获取的服务器数据： " + responseData);
-                            if (response.isSuccessful()){
-                                Gson gson = new GsonBuilder().create();
-                                String result = gson.fromJson(responseData,String.class);
-                                msg.what = 1;
-                                msg.obj = result;
-                            }else {
+                if (data.get(0).get("k2").toString().isEmpty()||data.get(1).get("k2").toString().isEmpty()
+                ||data.get(2).get("k2").toString().isEmpty()||data.get(3).get("k2").toString().isEmpty()
+                ||data.get(4).get("k2").toString().isEmpty()){
+                    Toast.makeText(MyContactAdd.this,"数据不完善，保存失败",Toast.LENGTH_SHORT).show();
+                    finish();
+                }else {
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            super.run();
+                            Message msg = handler.obtainMessage();
+                            SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+                            String sessionid = sharedPreferences.getString("Cookie", "");
+                            Log.d(TAG, "sessionid： " + sessionid);
+                            OkHttpClient okHttpClient = new OkHttpClient();
+                            RequestBody requestBody = new FormBody.Builder()
+                                    .add("姓名",data.get(0).get("k2").toString())
+                                    .add("证件类型",data.get(1).get("k2").toString())
+                                    .add("证件号码",data.get(2).get("k2").toString())
+                                    .add("乘客类型",data.get(3).get("k2").toString())
+                                    .add("电话",data.get(4).get("k2").toString())
+                                    .add("action","new")
+                                    .build();
+                            Request request = new Request.Builder()
+                                    .url(Constant.Host + "/otn/Passenger")
+                                    .addHeader("Cookie", sessionid)
+                                    .post(requestBody)
+                                    .build();
+                            try {
+                                Response response = okHttpClient.newCall(request).execute();
+                                String responseData = response.body().string();
+                                Log.d(TAG, "获取的服务器数据： " + responseData);
+                                if (response.isSuccessful()){
+                                    Gson gson = new GsonBuilder().create();
+                                    String result = gson.fromJson(responseData,String.class);
+                                    msg.what = 1;
+                                    msg.obj = result;
+                                }else {
+                                    msg.what = 2;
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
                                 msg.what = 2;
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            msg.what = 2;
+                            handler.sendMessage(msg);
                         }
-                        handler.sendMessage(msg);
-                    }
-                }.start();
+                    }.start();
+                }
             }
         });
 

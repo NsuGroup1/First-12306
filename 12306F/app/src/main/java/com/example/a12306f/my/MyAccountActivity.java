@@ -343,7 +343,6 @@ public class MyAccountActivity extends AppCompatActivity {
 
                     if (response.isSuccessful()) {
                         Gson gson = new GsonBuilder().create();
-
                         Account accounts = gson.fromJson(responseData,Account.class);
                         Log.d(TAG, "accounts： " + accounts);
                         message.what = 1;

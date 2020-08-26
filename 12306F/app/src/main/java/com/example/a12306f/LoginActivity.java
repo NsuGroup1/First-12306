@@ -198,6 +198,7 @@ public class LoginActivity extends AppCompatActivity {
                                 "正在加载中...",
                                 false,true);
 
+
                         new Thread(){
                             @Override
                             public void run() {
