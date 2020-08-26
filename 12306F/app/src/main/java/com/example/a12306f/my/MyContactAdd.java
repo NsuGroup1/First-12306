@@ -446,20 +446,24 @@ public class MyContactAdd extends AppCompatActivity {
                                         else{
                                             String str= newId.substring(0,17);//身份证前17位
                                             String str1 = newId.substring(newId.length()-1);//身份证最后一位
+                                            String str2= newId.substring(newId.length());
                                             Pattern p = Pattern.compile("[0-9]*");
-                                            Pattern p1 = Pattern.compile("[X]");
+                                            Pattern p2 = Pattern.compile("[0-9]*");
+                                            Pattern p1 = Pattern.compile("X");
                                             Matcher m = p.matcher(str);//比较
                                             Matcher m1 = p1.matcher(str1);
+                                            Matcher m2 = p2.matcher(str2);
 //                                            Matcher m2 = p.matcher(newId);
-                                            if(!m.matches() || (m.matches() && !m1.matches())) {
+                                            if((m2.matches() || (m.matches() && m1.matches()))) {
+                                                DialogClose.setClosable(dialog, true);
+                                                data.get(position).put("k2", newId);
+                                                adapter.notifyDataSetChanged();
+
+                                            }else {
                                                 Toast.makeText(MyContactAdd.this, "请输入有效证件号码", Toast.LENGTH_SHORT).show();
                                                 DialogClose.setClosable(dialog, false);
                                                 editIdNum.setError("请输入18位有效证件号码");
                                                 editIdNum.requestFocus();
-                                            }else {
-                                                DialogClose.setClosable(dialog, true);
-                                                data.get(position).put("k2", newId);
-                                                adapter.notifyDataSetChanged();
                                             }
                                         }
                                     }

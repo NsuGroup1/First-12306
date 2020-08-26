@@ -78,8 +78,6 @@ public class MyPasswordActivity extends AppCompatActivity {
 
         btn_queding = findViewById(R.id.password_save);
 
-
-
         btn_queding.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +86,7 @@ public class MyPasswordActivity extends AppCompatActivity {
                     return;
                 }
                 String p = et_new_password.getText().toString();
-                String p1 = et_new_password1.getText().toString();
+                final String p1 = et_new_password1.getText().toString();
                 if (!p.equals(p1)){
                     Toast.makeText(MyPasswordActivity.this, "密码不一致，请重新确认！", Toast.LENGTH_SHORT).show();
                     return;
@@ -106,13 +104,14 @@ public class MyPasswordActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             Message message = handler.obtainMessage();
-                            action = "update";
+
                             SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
                             String sessionid = sharedPreferences.getString("Cookie", "");
 
                             OkHttpClient client = new OkHttpClient();
                             RequestBody requestBody = new FormBody.Builder()
-                                    .add("action",action)
+                                    .add("newPassword",p1)
+                                    .add("action","update")
                                     .build();
                             Request request = new Request.Builder()
                                     .url(Constant.Host + "/otn/AccountPassword")
