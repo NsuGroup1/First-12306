@@ -6,7 +6,9 @@ import com.example.a12306f.a.Seat;
 import com.example.a12306f.a.Train;
 import com.example.a12306f.stationlist.Station;
 import com.example.a12306f.utils.Constant;
+import com.example.a12306f.utils.History;
 import com.example.a12306f.utils.NetworkUtils;
+import com.example.a12306f.utils.OpenHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -22,10 +24,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,6 +45,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,10 +71,13 @@ public class TicketFragment extends Fragment {
     private TextView tv_start_city,tv_arrive_city,tv_time;
     Button btn_query;
     private ImageView img_station_exchange;
+    private ListView lv_history;
     final private String TAG = "TicketFragment";
     private String stationFrom,stationTo;
-
+    private History history = new History();
     private List<Map<String,Object>> data;
+    private static final String TABLENAME="history_detail";
+
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -148,63 +156,63 @@ public class TicketFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        lv_history = view.findViewById(R.id.history);
         tv_start_city = view.findViewById(R.id.tv_start_city);
         tv_arrive_city = view.findViewById(R.id.tv_arrive_city);
         tv_time = view.findViewById(R.id.tv_time);
         btn_query = view.findViewById(R.id.btn_query);
         img_station_exchange = view.findViewById(R.id.img_station_exchange);
 
-        //联网查询
-        if (!NetworkUtils.checkNet(getActivity())){
-            Toast.makeText(getActivity(),"网络异常！",Toast.LENGTH_SHORT).show();
-            return;
-        }
-        ProgressDialog progressDialog = ProgressDialog.show(
-                getActivity(),
-                null,
-                "正在加载中...",
-                false, true);
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Message message = handler.obtainMessage();
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
-                String sessionid = sharedPreferences.getString("Cookie", "");
-
-                OkHttpClient okHttpClient = new OkHttpClient();
-                RequestBody requestBody = new FormBody.Builder()
-                        .add("fromStationName",tv_start_city.getText().toString())
-                        .add("toStationName",tv_arrive_city.getText().toString())
-                        .add("startTrainDate",tv_time.getText().toString())
-                        .build();
-                Request request = new Request.Builder()
-                        .url(Constant.Host+"/otn/TrainList")
-                        .post(requestBody)
-                        .addHeader("Cookie", sessionid)
-                        .build();
-                try {
-                    Response response = okHttpClient.newCall(request).execute();
-                    String responseData = response.body().string();
-                    Log.d(TAG, "获取的服务器数据： " + responseData);
-                    if (response.isSuccessful()){
-                        Gson gson = new GsonBuilder().create();
-                        Train[] trains =  gson.fromJson(responseData, Train[].class);
-                        message.what = 1;
-                        message.obj = trains;
-                    }
-                    else {
-                        message.what = 2;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    message.what = 2;
-                }
-                handler.sendMessage(message);
-
-            }
-        }.start();
+//        //联网查询
+//        if (!NetworkUtils.checkNet(getActivity())){
+//            Toast.makeText(getActivity(),"网络异常！",Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        ProgressDialog progressDialog = ProgressDialog.show(
+//                getActivity(),
+//                null,
+//                "正在加载中...",
+//                false, true);
+//        new Thread(){
+//            @Override
+//            public void run() {
+//                super.run();
+//                Message message = handler.obtainMessage();
+//                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
+//                String sessionid = sharedPreferences.getString("Cookie", "");
+//
+//                OkHttpClient okHttpClient = new OkHttpClient();
+//                RequestBody requestBody = new FormBody.Builder()
+//                        .add("fromStationName",tv_start_city.getText().toString())
+//                        .add("toStationName",tv_arrive_city.getText().toString())
+//                        .add("startTrainDate",tv_time.getText().toString())
+//                        .build();
+//                Request request = new Request.Builder()
+//                        .url(Constant.Host+"/otn/TrainList")
+//                        .post(requestBody)
+//                        .addHeader("Cookie", sessionid)
+//                        .build();
+//                try {
+//                    Response response = okHttpClient.newCall(request).execute();
+//                    String responseData = response.body().string();
+//                    Log.d(TAG, "获取的服务器数据： " + responseData);
+//                    if (response.isSuccessful()){
+//                        Gson gson = new GsonBuilder().create();
+//                        Train[] trains =  gson.fromJson(responseData, Train[].class);
+//                        message.what = 1;
+//                        message.obj = trains;
+//                    }
+//                    else {
+//                        message.what = 2;
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    message.what = 2;
+//                }
+//                handler.sendMessage(message);
+//
+//            }
+//        }.start();
 
 //出发城市
         tv_start_city.setOnClickListener(new View.OnClickListener() {
@@ -321,7 +329,6 @@ public class TicketFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

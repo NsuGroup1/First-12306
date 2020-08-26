@@ -77,7 +77,7 @@ public class YuDing03 extends AppCompatActivity {
         textView_date03.setText(getIntent().getStringExtra("TicketDate").split(" ")[0] + "(" + getIntent().getIntExtra("day", 0) + "日)");
         textView_date03.setTextColor(Color.BLACK);
         textView_leixing03.setText(getIntent().getStringExtra("Seat"));
-        textView_price03.setText(getIntent().getStringExtra("SeatPrice"));
+        textView_price03.setText("￥"+getIntent().getStringExtra("SeatPrice"));
         textView_price03.setTextColor(R.color.orange);
 
 //        list_YD03 = new ArrayList<>();
@@ -99,6 +99,8 @@ public class YuDing03 extends AppCompatActivity {
                 startActivity(intent2);
             }
         });
+        textView_jieusuan03.setText("订单总额:￥" + (int) 0.00 + "元");
+        textView_jieusuan03.setTextSize(20);
 
     }
     @Override

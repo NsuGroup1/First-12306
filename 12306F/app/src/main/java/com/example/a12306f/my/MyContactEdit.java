@@ -42,6 +42,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -147,7 +149,7 @@ public class MyContactEdit extends AppCompatActivity {
         String idType = (String) contact.get("idType");
         map2.put("k1","证件类型");
         //以冒号进行分割，取第一段
-        map2.put("k2",idType.split("\\:")[0]);
+        map2.put("k2",idType.split("\\：")[0]);
         map2.put("k3",R.drawable.flg_null);
         data.add(map2);
 
@@ -226,13 +228,18 @@ public class MyContactEdit extends AppCompatActivity {
                                     public void onClick(DialogInterface dialogInterface, int is) {
                                         String type = data1[is];
                                         data.get(position).put("k2",type);
+                                    }
+                                })
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
                                         adapter.notifyDataSetChanged();
                                     }
                                 })
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                                        DialogClose.setClosable(dialogInterface,true);
                                     }
                                 })
                                 .create()
@@ -253,10 +260,25 @@ public class MyContactEdit extends AppCompatActivity {
                                             DialogClose.setClosable(dialog,false);
                                             editTel.setError("请输入电话号码");
                                             editTel.requestFocus();
-                                        }else{
-                                            DialogClose.setClosable(dialog,true);
-                                            data.get(position).put("k2",newTel);
-                                            adapter.notifyDataSetChanged();
+                                        }
+                                        else if (newTel.length() != 11){
+                                            DialogClose.setClosable(dialog,false);
+                                            editTel.setError("请输入11位有效电话号码");
+                                            editTel.requestFocus();
+                                        }
+                                        else{
+                                            Pattern p = Pattern.compile("[0-9]*");
+                                            Matcher m = p.matcher(newTel);
+                                            if(!m.matches() ){
+                                                Toast.makeText(MyContactEdit.this,"请输入有效电话号码", Toast.LENGTH_SHORT).show();
+                                                DialogClose.setClosable(dialog,false);
+                                                editTel.setError("请输入11位有效电话号码");
+                                                editTel.requestFocus();
+                                            }else {
+                                                DialogClose.setClosable(dialog, true);
+                                                data.get(position).put("k2", newTel);
+                                                adapter.notifyDataSetChanged();
+                                            }
                                         }
                                     }
                                 })

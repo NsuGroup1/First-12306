@@ -48,6 +48,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Phaser;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -99,11 +101,12 @@ public class MyContactAdd extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String name_lv = searchData.get(position).get("name").toString();
                         String phone = searchData.get(position).get("number").toString();
-                        value_search= new String[]{name_lv, " ", " ", " ", phone};
+                        value_search= new String[]{name_lv, "", "", "", phone};
                         for (int i = 0;i<value_search.length;i++){
                             HashMap map_search = new HashMap();
                             map_search.put("k2",value_search[i]);
                             data.add(map_search);
+                            adapter.notifyDataSetChanged();
                         }
                     }
                 });
@@ -395,7 +398,7 @@ public class MyContactAdd extends AppCompatActivity {
                                 .show();
                         break;
                     case 1:
-                            final String[] data0 = {"身份证"};
+                            final String[] data0 = {"身份证","学生证"};
                             new AlertDialog.Builder(MyContactAdd.this)
                                     .setTitle("请选择证件类型")
                                     .setSingleChoiceItems(data0, 0, new DialogInterface.OnClickListener() {
@@ -403,19 +406,18 @@ public class MyContactAdd extends AppCompatActivity {
                                         public void onClick(DialogInterface dialogInterface, int is) {
                                             String type = data0[is];
                                             data.get(position).put("k2",type);
-                                            adapter.notifyDataSetChanged();
                                         }
                                     })
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-
+                                            DialogClose.setClosable(dialogInterface,true);
                                         }
                                     })
                                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-
+                                            adapter.notifyDataSetChanged();
                                         }
                                     })
                                     .create()
@@ -431,15 +433,34 @@ public class MyContactAdd extends AppCompatActivity {
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int witch) {
-                                        String newTel = editIdNum.getText().toString();
-                                        if(TextUtils.isEmpty(newTel)){
+                                        String newId = editIdNum.getText().toString();
+                                        if(TextUtils.isEmpty(newId)){
                                             DialogClose.setClosable(dialog,false);
                                             editIdNum.setError("请输入证件号码");
                                             editIdNum.requestFocus();
-                                        }else{
-                                            DialogClose.setClosable(dialog,true);
-                                            data.get(position).put("k2",newTel);
-                                            adapter.notifyDataSetChanged();
+                                        }else if (newId.length() != 18){
+                                            DialogClose.setClosable(dialog,false);
+                                            editIdNum.setError("请输入18位有效证件号码");
+                                            editIdNum.requestFocus();
+                                        }
+                                        else{
+                                            String str= newId.substring(0,17);//身份证前17位
+                                            String str1 = newId.substring(newId.length()-1);//身份证最后一位
+                                            Pattern p = Pattern.compile("[0-9]*");
+                                            Pattern p1 = Pattern.compile("[X]");
+                                            Matcher m = p.matcher(str);//比较
+                                            Matcher m1 = p1.matcher(str1);
+//                                            Matcher m2 = p.matcher(newId);
+                                            if(!m.matches() || (m.matches() && !m1.matches())) {
+                                                Toast.makeText(MyContactAdd.this, "请输入有效证件号码", Toast.LENGTH_SHORT).show();
+                                                DialogClose.setClosable(dialog, false);
+                                                editIdNum.setError("请输入18位有效证件号码");
+                                                editIdNum.requestFocus();
+                                            }else {
+                                                DialogClose.setClosable(dialog, true);
+                                                data.get(position).put("k2", newId);
+                                                adapter.notifyDataSetChanged();
+                                            }
                                         }
                                     }
                                 })
@@ -461,13 +482,19 @@ public class MyContactAdd extends AppCompatActivity {
                                     public void onClick(DialogInterface dialogInterface, int is) {
                                         String type = data1[is];
                                         data.get(position).put("k2",type);
+                                    }
+                                })
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
                                         adapter.notifyDataSetChanged();
                                     }
                                 })
-                                .setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                    public void onClick(DialogInterface dialog, int i) {
 
+                                        DialogClose.setClosable(dialog,true);
                                     }
                                 })
                                 .create()
@@ -488,10 +515,24 @@ public class MyContactAdd extends AppCompatActivity {
                                             DialogClose.setClosable(dialog,false);
                                             editTel.setError("请输入电话号码");
                                             editTel.requestFocus();
-                                        }else{
-                                            DialogClose.setClosable(dialog,true);
-                                            data.get(position).put("k2",newTel);
-                                            adapter.notifyDataSetChanged();
+                                        }else if (newTel.length() != 11){
+                                            DialogClose.setClosable(dialog,false);
+                                            editTel.setError("请输入11位有效电话号码");
+                                            editTel.requestFocus();
+                                        }
+                                        else{
+                                            Pattern p = Pattern.compile("[0-9]*");
+                                            Matcher m = p.matcher(newTel);
+                                            if(!m.matches() ){
+                                                Toast.makeText(MyContactAdd.this,"请输入有效电话号码", Toast.LENGTH_SHORT).show();
+                                                DialogClose.setClosable(dialog,false);
+                                                editTel.setError("请输入11位有效电话号码");
+                                                editTel.requestFocus();
+                                            }else {
+                                                DialogClose.setClosable(dialog, true);
+                                                data.get(position).put("k2", newTel);
+                                                adapter.notifyDataSetChanged();
+                                            }
                                         }
                                     }
                                 })
