@@ -226,7 +226,7 @@ public class TicketFragment extends Fragment {
 
 
 
-         Calendar oldCalendar = Calendar.getInstance();
+         final Calendar oldCalendar = Calendar.getInstance();
         final int Year = oldCalendar.get(Calendar.YEAR);
         final int Month = oldCalendar.get(Calendar.MONTH);
         final int Day = oldCalendar.get(Calendar.DATE);
@@ -234,6 +234,7 @@ public class TicketFragment extends Fragment {
         Log.d("getActivity.this", "Week: "+Week);
 
         tv_time.setText(Year +"-"+(Month +1)+"-"+ Day +" "+Week);
+
         //TODO 日期选择对话框
         tv_time.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,33 +250,44 @@ public class TicketFragment extends Fragment {
 //                        Log.d("getActivity.this",weekDay);
 //                    }
 //                },Year,Month,Day).show();
-                DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener(){
+//                DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener(){
+//                    @Override
+//                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                        Calendar newCalendar = Calendar.getInstance();
+//                        newCalendar.set(year,month,dayOfMonth);
+//                        String weekDay = DateUtils.formatDateTime(getActivity(),newCalendar.getTimeInMillis(),DateUtils.FORMAT_SHOW_WEEKDAY);
+//                        tv_time.setText(year+"-"+(month+1)+"-"+dayOfMonth+" "+weekDay);
+//                        Log.d("getActivity.this",weekDay);
+//                    }
+//                };
+//                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),listener,
+//                        Year,Month,Day){
+//                    @Override
+//                    public void onDateChanged(@NonNull DatePicker view, int year, int month, int dayOfMonth) {
+//                        super.onDateChanged(view, year, month, dayOfMonth);
+//                        if (year < Year)
+//                            view.updateDate(Year, Month, Day);
+//                        if (month < Month && year == Year)
+//                            view.updateDate(Year, Month, Day);
+//                        if (dayOfMonth < Day && year == Year && month == Month)
+//                            view.updateDate(Year, Month, Day);
+//
+//                    }
+//                };
+//                datePickerDialog.show();
 
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        Calendar newCalendar = Calendar.getInstance();
-                        newCalendar.set(year,month,dayOfMonth);
-                        String weekDay = DateUtils.formatDateTime(getActivity(),newCalendar.getTimeInMillis(),DateUtils.FORMAT_SHOW_WEEKDAY);
+                        Calendar newCalender = Calendar.getInstance();
+                        newCalender.set(year,month,dayOfMonth);
+                        String weekDay = DateUtils.formatDateTime(getActivity(),newCalender.getTimeInMillis(),DateUtils.FORMAT_SHOW_WEEKDAY);
                         tv_time.setText(year+"-"+(month+1)+"-"+dayOfMonth+" "+weekDay);
-                        Log.d("getActivity.this",weekDay);
                     }
-                };
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),listener,
-                        Year,Month,Day){
-                    @Override
-                    public void onDateChanged(@NonNull DatePicker view, int year, int month, int dayOfMonth) {
-                        super.onDateChanged(view, year, month, dayOfMonth);
-                        if (year < Year)
-                            view.updateDate(Year, Month, Day);
-                        if (month < Month && year == Year)
-                            view.updateDate(Year, Month, Day);
-                        if (dayOfMonth < Day && year == Year && month == Month)
-                            view.updateDate(Year, Month, Day);
-
-                    }
-                };
+                },Year,Month,Day);
+                datePickerDialog.setTitle("请选择日期");
+                datePickerDialog.getDatePicker().setMinDate(oldCalendar.getTimeInMillis());
                 datePickerDialog.show();
-
             }
         });
 
