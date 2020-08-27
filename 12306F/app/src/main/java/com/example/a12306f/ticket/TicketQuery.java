@@ -1,6 +1,7 @@
 package com.example.a12306f.ticket;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -14,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,8 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.a12306f.R;
+import com.example.a12306f.ViewPagerActivity;
 import com.example.a12306f.a.Seat;
 import com.example.a12306f.a.Train;
+import com.example.a12306f.fragment.TicketFragment;
+import com.example.a12306f.my.MyAccountActivity;
+import com.example.a12306f.my.MyContactAdd;
 import com.example.a12306f.utils.Constant;
 import com.example.a12306f.utils.NetworkUtils;
 import com.google.gson.Gson;
@@ -63,7 +69,6 @@ public class TicketQuery extends AppCompatActivity {
             }
             super.handleMessage(msg);
             switch (msg.what){
-
                 case 1:
                     data.clear();
                     Train[] trains = (Train[]) msg.obj;
@@ -129,6 +134,13 @@ public class TicketQuery extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_query);
+
+        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setLogo(R.mipmap.ic_launcher);
+//        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setLogo(R.mipmap.ic_launcher);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
 
         tv_beforeDay = findViewById(R.id.tv_previousDay);
         tv_afterDay = findViewById(R.id.tv_afterDay);
@@ -267,5 +279,15 @@ public class TicketQuery extends AppCompatActivity {
             handler.sendMessage(message);
             return resultObject;
         }
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

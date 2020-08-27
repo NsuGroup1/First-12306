@@ -1,6 +1,7 @@
 package com.example.a12306f.ticket;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -16,6 +17,7 @@ import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -69,6 +71,14 @@ public class YuDing02 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_yu_ding02);
+
+        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setLogo(R.mipmap.ic_launcher);
+//        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setLogo(R.mipmap.ic_launcher);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+
 
         beforeDay = findViewById(R.id.tv_previousDay2);
         afterDay = findViewById(R.id.tv_afterDay2);
@@ -194,6 +204,7 @@ public class YuDing02 extends AppCompatActivity {
             super.onPostExecute(o);
             list02.clear();
             if (o instanceof Train){
+
                 train = (Train) o;
                 Map<String,Seat> seats = train.getSeats();
                 for (String key:seats.keySet()){
@@ -282,5 +293,15 @@ public class YuDing02 extends AppCompatActivity {
         TextView tvSeatNum;
         TextView tvSeatPrice;
         Button btn_order;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

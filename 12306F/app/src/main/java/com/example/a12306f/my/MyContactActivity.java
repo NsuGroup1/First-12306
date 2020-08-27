@@ -125,9 +125,7 @@ public class MyContactActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-//                Bundle bundle = new Bundle();
-//                bundle.putString("name", "xxxxxx");
-//                intent.putExtra("name", "");
+
                 intent.putExtra("row", (Serializable) data.get(position));
                 intent.setClass(MyContactActivity.this, MyContactEdit.class);
 
@@ -147,53 +145,7 @@ public class MyContactActivity extends AppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-//                try {
-//                   URL url = new URL(Constant.Host+"/otn/PassengerList");
-//
-//                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-//                    httpURLConnection.setRequestMethod("POST");// 提交
-//                    httpURLConnection.setConnectTimeout(Constant.REQUEST_TIMEOUT);//连接超时
-//                    httpURLConnection.setReadTimeout(Constant.SO_TIMEOUT);//读取超时
-//                    // 发送POST请求
-//                    httpURLConnection.setDoOutput(true);
-//                    httpURLConnection.setDoInput(true);
-//                    //不使用缓存
-//                    httpURLConnection.setUseCaches(false);
-//                    SharedPreferences sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
-//                    String value = sharedPreferences.getString("Cookie","");
-//                    //设置请求属性
-//                    httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-//                    httpURLConnection.setRequestProperty("Connection", "Keep-Alive");// 维持长连接
-//                    httpURLConnection.setRequestProperty("Charset", "UTF-8");
-//                    httpURLConnection.setRequestProperty("Cookie",value);
-//                    // 获取URLConnection对象对应的输出流
-//                    PrintWriter printWriter = new PrintWriter(httpURLConnection.getOutputStream());
-//                    //发送请求参数
-//                    String params = "";
-//                    Log.d("xx",params);
-//                    printWriter.write(params);
-//                    // flush输出流的缓冲
-//                    printWriter.flush();
-//                    printWriter.close();
-//
-//                    int resultCode = httpURLConnection.getResponseCode();
-//                    if (resultCode == HttpURLConnection.HTTP_OK) {
-//                        InputStream in = httpURLConnection.getInputStream();
-//                        StringBuffer sb = new StringBuffer();
-//                        String readLine = new String();
-//                        BufferedReader reader = new BufferedReader(
-//                                new InputStreamReader(in, "UTF-8"));
-//                        while ((readLine = reader.readLine()) != null) {
-//                            sb.append(readLine).append("\n");
-//                        }
-//                        String result = sb.toString();
-//                        //解析Json
-//                        Gson gson = new GsonBuilder().create();
-//                        Passenger[] passengers = gson.fromJson(result, Passenger[].class);
-//
-//                        msg.what = 1;
-//                        msg.obj = passengers;
-//                        in.close();
+
                     Message message = new Message();
                     action = "update";
                     SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.Button;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,16 +12,13 @@ import java.util.HashMap;
 
 
 public class History{
-    private ListView listView_history;
     private OpenHelper OpenHelper;
     private static final String TABLENAME="history_detail";
     public History(Context context){
         OpenHelper = new OpenHelper(context);
     }
 
-    public History() {
 
-    }
 
 
     public void insert(String startC,String endC){

@@ -1,9 +1,12 @@
 package com.example.a12306f.ticket;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -34,6 +37,14 @@ public class YuDing04 extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_yu_ding04);
+
+            ActionBar actionBar = getSupportActionBar();
+//        actionBar.setLogo(R.mipmap.ic_launcher);
+//        actionBar.setDisplayUseLogoEnabled(true);
+            actionBar.setLogo(R.mipmap.ic_launcher);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayUseLogoEnabled(true);
+
 
             listView = findViewById(R.id.listview_YD04);
             TV_zanbu = findViewById(R.id.TV_zanbupay_YD04);
@@ -73,4 +84,14 @@ public class YuDing04 extends AppCompatActivity {
                 }
             });
         }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

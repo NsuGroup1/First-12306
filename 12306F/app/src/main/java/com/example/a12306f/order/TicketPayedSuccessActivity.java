@@ -1,5 +1,6 @@
 package com.example.a12306f.order;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -38,7 +39,7 @@ public class TicketPayedSuccessActivity extends AppCompatActivity {
 //                order.getId() + "," + order.getTrain().getTrainNo() + "," +
 //                        order.getTrain().getStartTrainDate() + "," +
 //                        order.getPassengerList(), imageView,700,700
-                2016 + "," + 123456 + "," +
+                2020 + "," + "D5" + "," +
                 2020 + "," +
                         123456, imageView,700,700
         );

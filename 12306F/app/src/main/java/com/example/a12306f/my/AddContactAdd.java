@@ -1,5 +1,9 @@
 package com.example.a12306f.my;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -24,17 +28,12 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.a12306f.R;
 import com.example.a12306f.utils.Constant;
 import com.example.a12306f.utils.DialogClose;
 import com.example.a12306f.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,14 +49,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class MyContactAdd extends AppCompatActivity {
-
-    private ListView myContactAdd;
+public class AddContactAdd extends AppCompatActivity {
+    private ListView addContactAdd;
     private Button btn_Save;
     private SimpleAdapter adapter;
     private List<Map<String,Object>> data;
     private ProgressDialog progressDialog;
-    final private String TAG = "MyContactAddActivity";
+    final private String TAG = "AddContactAddActivity";
 
     String[] k1 = {"姓名","证件类型","证件号码","乘客类型","手机号"};
     String[] k2 = {""};
@@ -71,8 +69,6 @@ public class MyContactAdd extends AppCompatActivity {
 
     private ContentResolver contentResolver;
     private ListView listView_dialog;
-//    private List<String> mContactsName = new ArrayList<>();
-//    private List<String> mContactsPhone = new ArrayList<>();
     private SimpleAdapter searchAdapter;
     private List<HashMap<String,Object>> searchData;
     private String[] value_search;
@@ -151,7 +147,7 @@ public class MyContactAdd extends AppCompatActivity {
 
                 View searchView = getLayoutInflater().inflate(R.layout.dialog_mycontact_search,null);
 
-                new AlertDialog.Builder(MyContactAdd.this)
+                new AlertDialog.Builder(AddContactAdd.this)
                         .setTitle("请选择")
                         .setView(searchView)
 //                        .setAdapter(new SearchAdapter(), new DialogInterface.OnClickListener() {
@@ -211,7 +207,7 @@ public class MyContactAdd extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
 
-        myContactAdd = findViewById(R.id.lv_add_contact_add);
+        addContactAdd = findViewById(R.id.lv_add_contact_add);
         btn_Save = findViewById(R.id.add_contact_add_save);
 
         final Handler handler = new Handler(){
@@ -225,14 +221,14 @@ public class MyContactAdd extends AppCompatActivity {
                     case 1:
                         String result = msg.obj.toString();
                         if ("1".equals(result)){
-                            Toast.makeText(MyContactAdd.this,"保存成功!",Toast.LENGTH_LONG).show();
-                            MyContactAdd.this.finish();
+                            Toast.makeText(AddContactAdd.this,"保存成功!",Toast.LENGTH_LONG).show();
+                            AddContactAdd.this.finish();
                         }else if ("-1".equals(result)){
-                        Toast.makeText(MyContactAdd.this,"保存失败!",Toast.LENGTH_LONG).show();
-                    }
+                            Toast.makeText(AddContactAdd.this,"保存失败!",Toast.LENGTH_LONG).show();
+                        }
                         break;
                     case 2:
-                        Toast.makeText(MyContactAdd.this,"服务器错误!",Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddContactAdd.this,"服务器错误!",Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -241,14 +237,14 @@ public class MyContactAdd extends AppCompatActivity {
         btn_Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!NetworkUtils.checkNet(MyContactAdd.this)){
-                    Toast.makeText(MyContactAdd.this,"当前网络不可用",Toast.LENGTH_LONG).show();
+                if (!NetworkUtils.checkNet(AddContactAdd.this)){
+                    Toast.makeText(AddContactAdd.this,"当前网络不可用",Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (data.get(0).get("k2").toString().isEmpty()||data.get(1).get("k2").toString().isEmpty()
-                ||data.get(2).get("k2").toString().isEmpty()||data.get(3).get("k2").toString().isEmpty()
-                ||data.get(4).get("k2").toString().isEmpty()){
-                    Toast.makeText(MyContactAdd.this,"数据不完善，保存失败",Toast.LENGTH_SHORT).show();
+                        ||data.get(2).get("k2").toString().isEmpty()||data.get(3).get("k2").toString().isEmpty()
+                        ||data.get(4).get("k2").toString().isEmpty()){
+                    Toast.makeText(AddContactAdd.this,"数据不完善，保存失败",Toast.LENGTH_SHORT).show();
                     finish();
                 }else {
                     new Thread(){
@@ -297,51 +293,8 @@ public class MyContactAdd extends AppCompatActivity {
         });
 
         //TODO 获取上个页面传来的数据
-        Intent intent = getIntent();
-//        Map<String,Object> contact = (HashMap<String, Object>) getIntent().getSerializableExtra("row");
+        data = new ArrayList<>();
 
-        data = new ArrayList<Map<String, Object>>();
-
-//        String name = (String) contact.get("name");
-//        String name = "";
-//        map1.put("k1","姓名");
-//        //以左括号进行分割，取第一段
-//        map1.put("k2",name);
-//        map1.put("k3",R.drawable.forward_25);
-//        data.add(map1);
-//
-//        Map<String,Object> map2 = new HashMap<>();
-//        String idType = "";
-//        map2.put("k1","证件类型");
-//        //以冒号进行分割，取第一段
-//        map2.put("k2",idType);
-//        map2.put("k3",R.drawable.forward_25);
-//        data.add(map2);
-//
-//        Map<String,Object> map3 = new HashMap<>();
-////        String idCard = (String) contact.get("idCard");
-//        String idCard = "";
-//        map3.put("k1","证件号码");
-//        //以冒号进行分割，取第一段
-//        map3.put("k2",idCard);
-//        map3.put("k3",R.drawable.forward_25);
-//        data.add(map3);
-//
-//        Map<String,Object> map4 = new HashMap<>();
-////        String age = (String) contact.get("age");
-//        String age = "";
-//        map4.put("k1","乘客类型");
-//        map4.put("k2",age);
-//        map4.put("k3",R.drawable.forward_25);
-//        data.add(map4);
-//
-//        Map<String,Object> map5 = new HashMap<>();
-////        String tel = (String) contact.get("tel");
-//        String tel = "";
-//        map5.put("k1","手机号");
-//        map5.put("k2",tel);
-//        map5.put("k3",R.drawable.forward_25);
-//        data.add(map5);
         for (int i = 0;i <k1.length;i++){
             Map<String,Object> map1 = new HashMap<>();
             map1.put("k1",k1[i]);
@@ -358,16 +311,16 @@ public class MyContactAdd extends AppCompatActivity {
                 new String[]{"k1","k2","k3"},
                 new int[]{R.id.tv_my_contact_edit_key,R.id.tv_my_contact_edit_value,R.id.img_my_contact_edit_flag});
 
-        myContactAdd.setAdapter(adapter);
+        addContactAdd.setAdapter(adapter);
 
-        myContactAdd.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        addContactAdd.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 switch(position){
                     case 0:
-                        final EditText editName = new EditText(MyContactAdd.this);
+                        final EditText editName = new EditText(AddContactAdd.this);
                         editName.setText((String) data.get(position).get("k2"));
-                        new AlertDialog.Builder(MyContactAdd.this)
+                        new AlertDialog.Builder(AddContactAdd.this)
                                 .setIcon(android.R.drawable.ic_dialog_info)
                                 .setTitle("请输入姓名")
                                 .setView(editName)
@@ -396,35 +349,35 @@ public class MyContactAdd extends AppCompatActivity {
                                 .show();
                         break;
                     case 1:
-                            final String[] data0 = {"身份证","学生证"};
-                            new AlertDialog.Builder(MyContactAdd.this)
-                                    .setTitle("请选择证件类型")
-                                    .setSingleChoiceItems(data0, 0, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int is) {
-                                            String type = data0[is];
-                                            data.get(position).put("k2",type);
-                                        }
-                                    })
-                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            DialogClose.setClosable(dialogInterface,true);
-                                        }
-                                    })
-                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            adapter.notifyDataSetChanged();
-                                        }
-                                    })
-                                    .create()
-                                    .show();
-                            break;
+                        final String[] data0 = {"身份证","学生证"};
+                        new AlertDialog.Builder(AddContactAdd.this)
+                                .setTitle("请选择证件类型")
+                                .setSingleChoiceItems(data0, 0, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int is) {
+                                        String type = data0[is];
+                                        data.get(position).put("k2",type);
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        DialogClose.setClosable(dialogInterface,true);
+                                    }
+                                })
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                })
+                                .create()
+                                .show();
+                        break;
                     case 2:
-                        final EditText editIdNum = new EditText(MyContactAdd.this);
+                        final EditText editIdNum = new EditText(AddContactAdd.this);
                         editIdNum.setText((String) data.get(position).get("k2"));
-                        new AlertDialog.Builder(MyContactAdd.this)
+                        new AlertDialog.Builder(AddContactAdd.this)
                                 .setIcon(android.R.drawable.ic_dialog_info)
                                 .setTitle("请输入证件号码")
                                 .setView(editIdNum)
@@ -451,14 +404,13 @@ public class MyContactAdd extends AppCompatActivity {
                                             Matcher m = p.matcher(str);//比较
                                             Matcher m1 = p1.matcher(str1);
                                             Matcher m2 = p2.matcher(str2);
-//                                            Matcher m2 = p.matcher(newId);
                                             if((m2.matches() || (m.matches() && m1.matches()))) {
                                                 DialogClose.setClosable(dialog, true);
                                                 data.get(position).put("k2", newId);
                                                 adapter.notifyDataSetChanged();
 
                                             }else {
-                                                Toast.makeText(MyContactAdd.this, "请输入有效证件号码", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(AddContactAdd.this, "请输入有效证件号码", Toast.LENGTH_SHORT).show();
                                                 DialogClose.setClosable(dialog, false);
                                                 editIdNum.setError("请输入18位有效证件号码");
                                                 editIdNum.requestFocus();
@@ -477,7 +429,7 @@ public class MyContactAdd extends AppCompatActivity {
                         break;
                     case 3:
                         final String[] data1 = {"成人", "学生", "儿童", "其他"};
-                        new AlertDialog.Builder(MyContactAdd.this)
+                        new AlertDialog.Builder(AddContactAdd.this)
                                 .setTitle("请选择乘客类型")
                                 .setSingleChoiceItems(data1, 0, new DialogInterface.OnClickListener() {
                                     @Override
@@ -503,9 +455,9 @@ public class MyContactAdd extends AppCompatActivity {
                                 .show();
                         break;
                     case 4:
-                        final EditText editTel = new EditText(MyContactAdd.this);
+                        final EditText editTel = new EditText(AddContactAdd.this);
                         editTel.setText((String) data.get(position).get("k2"));
-                        new AlertDialog.Builder(MyContactAdd.this)
+                        new AlertDialog.Builder(AddContactAdd.this)
                                 .setIcon(android.R.drawable.ic_dialog_info)
                                 .setTitle("请输入电话号码")
                                 .setView(editTel)
@@ -526,7 +478,7 @@ public class MyContactAdd extends AppCompatActivity {
                                             Pattern p = Pattern.compile("[0-9]*");
                                             Matcher m = p.matcher(newTel);
                                             if(!m.matches() ){
-                                                Toast.makeText(MyContactAdd.this,"请输入有效电话号码", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(AddContactAdd.this,"请输入有效电话号码", Toast.LENGTH_SHORT).show();
                                                 DialogClose.setClosable(dialog,false);
                                                 editTel.setError("请输入11位有效电话号码");
                                                 editTel.requestFocus();

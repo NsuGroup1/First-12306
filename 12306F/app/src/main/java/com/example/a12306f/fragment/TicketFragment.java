@@ -1,35 +1,11 @@
 package com.example.a12306f.fragment;
 
-import com.example.a12306f.LoginActivity;
-import com.example.a12306f.a.Passenger;
-import com.example.a12306f.a.Seat;
-import com.example.a12306f.a.Train;
-import com.example.a12306f.stationlist.Station;
-import com.example.a12306f.utils.Constant;
-import com.example.a12306f.utils.History;
-import com.example.a12306f.utils.NetworkUtils;
-import com.example.a12306f.utils.OpenHelper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.tbruyelle.rxpermissions2.RxPermissions;
-
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-
-import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -49,22 +25,27 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+
 import com.example.a12306f.R;
+import com.example.a12306f.a.Seat;
+import com.example.a12306f.a.Train;
+import com.example.a12306f.adapter.JAdapter;
 import com.example.a12306f.stationlist.StationListActivity;
 import com.example.a12306f.ticket.TicketQuery;
+import com.example.a12306f.utils.History;
+import com.google.gson.internal.bind.ReflectiveTypeAdapterFactory;
 
-import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class TicketFragment extends Fragment {
 
@@ -73,10 +54,10 @@ public class TicketFragment extends Fragment {
     private ImageView img_station_exchange;
     private ListView lv_history;
     final private String TAG = "TicketFragment";
-    private String stationFrom,stationTo;
-    private History history = new History();
+    private History history;
     private List<Map<String,Object>> data;
-    private static final String TABLENAME="history_detail";
+    private ArrayList arrayList;
+    private JAdapter Adapter;
 
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -163,56 +144,6 @@ public class TicketFragment extends Fragment {
         btn_query = view.findViewById(R.id.btn_query);
         img_station_exchange = view.findViewById(R.id.img_station_exchange);
 
-//        //联网查询
-//        if (!NetworkUtils.checkNet(getActivity())){
-//            Toast.makeText(getActivity(),"网络异常！",Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        ProgressDialog progressDialog = ProgressDialog.show(
-//                getActivity(),
-//                null,
-//                "正在加载中...",
-//                false, true);
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                super.run();
-//                Message message = handler.obtainMessage();
-//                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
-//                String sessionid = sharedPreferences.getString("Cookie", "");
-//
-//                OkHttpClient okHttpClient = new OkHttpClient();
-//                RequestBody requestBody = new FormBody.Builder()
-//                        .add("fromStationName",tv_start_city.getText().toString())
-//                        .add("toStationName",tv_arrive_city.getText().toString())
-//                        .add("startTrainDate",tv_time.getText().toString())
-//                        .build();
-//                Request request = new Request.Builder()
-//                        .url(Constant.Host+"/otn/TrainList")
-//                        .post(requestBody)
-//                        .addHeader("Cookie", sessionid)
-//                        .build();
-//                try {
-//                    Response response = okHttpClient.newCall(request).execute();
-//                    String responseData = response.body().string();
-//                    Log.d(TAG, "获取的服务器数据： " + responseData);
-//                    if (response.isSuccessful()){
-//                        Gson gson = new GsonBuilder().create();
-//                        Train[] trains =  gson.fromJson(responseData, Train[].class);
-//                        message.what = 1;
-//                        message.obj = trains;
-//                    }
-//                    else {
-//                        message.what = 2;
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    message.what = 2;
-//                }
-//                handler.sendMessage(message);
-//
-//            }
-//        }.start();
 
 //出发城市
         tv_start_city.setOnClickListener(new View.OnClickListener() {
@@ -286,31 +217,65 @@ public class TicketFragment extends Fragment {
                 tv_arrive_city.startAnimation(aniright);
             }
         });
+//历史记录
+        history = new History(getActivity());
+        arrayList = history.query();
+        lv_history = view.findViewById(R.id.history);
+        Adapter= new JAdapter(getActivity(),arrayList,R.layout.history_item);
+        lv_history.setAdapter(Adapter);
 
 
-        final Calendar oldCalendar = Calendar.getInstance();
+
+         Calendar oldCalendar = Calendar.getInstance();
         final int Year = oldCalendar.get(Calendar.YEAR);
         final int Month = oldCalendar.get(Calendar.MONTH);
         final int Day = oldCalendar.get(Calendar.DATE);
         String Week = DateUtils.formatDateTime(getActivity(),oldCalendar.getTimeInMillis(),DateUtils.FORMAT_SHOW_WEEKDAY);
         Log.d("getActivity.this", "Week: "+Week);
 
-        tv_time.setText(Year+"-"+(Month+1)+"-"+Day+" "+Week);
+        tv_time.setText(Year +"-"+(Month +1)+"-"+ Day +" "+Week);
         //TODO 日期选择对话框
         tv_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+//                new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+//                    @Override
+//                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+//
+//                        Calendar newCalendar = Calendar.getInstance();
+//                        newCalendar.set(year,month,day);
+//                        String weekDay = DateUtils.formatDateTime(getActivity(),newCalendar.getTimeInMillis(),DateUtils.FORMAT_SHOW_WEEKDAY);
+//                        tv_time.setText(year+"-"+(month+1)+"-"+day+" "+weekDay);
+//                        Log.d("getActivity.this",weekDay);
+//                    }
+//                },Year,Month,Day).show();
+                DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener(){
 
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         Calendar newCalendar = Calendar.getInstance();
-                        newCalendar.set(year,month,day);
+                        newCalendar.set(year,month,dayOfMonth);
                         String weekDay = DateUtils.formatDateTime(getActivity(),newCalendar.getTimeInMillis(),DateUtils.FORMAT_SHOW_WEEKDAY);
-                        tv_time.setText(year+"-"+(month+1)+"-"+day+" "+weekDay);
+                        tv_time.setText(year+"-"+(month+1)+"-"+dayOfMonth+" "+weekDay);
                         Log.d("getActivity.this",weekDay);
                     }
-                },Year,Month,Day).show();
+                };
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),listener,
+                        Year,Month,Day){
+                    @Override
+                    public void onDateChanged(@NonNull DatePicker view, int year, int month, int dayOfMonth) {
+                        super.onDateChanged(view, year, month, dayOfMonth);
+                        if (year < Year)
+                            view.updateDate(Year, Month, Day);
+                        if (month < Month && year == Year)
+                            view.updateDate(Year, Month, Day);
+                        if (dayOfMonth < Day && year == Year && month == Month)
+                            view.updateDate(Year, Month, Day);
+
+                    }
+                };
+                datePickerDialog.show();
+
             }
         });
 
@@ -318,6 +283,21 @@ public class TicketFragment extends Fragment {
         btn_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //历史记录
+                String SW=tv_start_city.getText().toString();
+                String EW=tv_arrive_city.getText().toString();
+                history.insert(SW,EW);
+                SharedPreferences sharedPreferences= getActivity().getSharedPreferences("user",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor=sharedPreferences.edit();
+                editor.putString("SW",SW);
+                editor.putString("EW",EW);
+                editor.commit();
+
+                arrayList = history.query();
+                Adapter= new JAdapter(getActivity(),arrayList,R.layout.history_item);
+                Adapter.notifyDataSetChanged();
+
+//跳转查询
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("searchData", (Serializable) data);

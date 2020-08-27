@@ -4,13 +4,14 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Button;
 
 public class OpenHelper extends SQLiteOpenHelper {
     private final  static String CREATE_TABLE_SQL = "create table history_detail(_id integer primary key autoincrement,startC,endC)";
 
     private final  static String CREATE_TABLE_SQL1 = "create table person_detail(_id integer primary key autoincrement,addName,idCard,tel)";
 
-
+    private Button btn_query;
 
 
     public OpenHelper(Context context){

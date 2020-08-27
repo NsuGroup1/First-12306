@@ -2,16 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.a12306f">
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions" />
@@ -23,6 +21,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".my.AddContactAdd"></activity>
+        <activity android:name=".my.AddContactsEdit" />
         <activity android:name=".order.TicketInfoFragment" />
         <activity android:name=".order.TicketOrderPayedActivity" />
         <activity
@@ -52,16 +52,16 @@
             android:label="添加乘车人" />
         <activity
             android:name=".ticket.YuDing04"
-            android:label="4/5预定" />
+            android:label="车票预定4/5" />
         <activity
             android:name=".ticket.YuDing03"
-            android:label="3/5预定" />
+            android:label="车票预定3/5" />
         <activity
             android:name=".ticket.YuDing02"
-            android:label="2/5预定" />
+            android:label="车票预定2/5" />
         <activity
             android:name=".ticket.TicketQuery"
-            android:label="1/5预定" />
+            android:label="车票预定1/5" />
         <activity
             android:name=".fragment.MyFragment"
             tools:ignore="Instantiatable" />

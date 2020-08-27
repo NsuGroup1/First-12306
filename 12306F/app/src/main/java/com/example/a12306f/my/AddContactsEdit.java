@@ -1,5 +1,9 @@
 package com.example.a12306f.my;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -22,20 +26,13 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.a12306f.R;
-import com.example.a12306f.a.Passenger;
 import com.example.a12306f.utils.Constant;
 import com.example.a12306f.utils.DialogClose;
-import com.example.a12306f.utils.Md5Utils;
 import com.example.a12306f.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,8 +48,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class MyContactEdit extends AppCompatActivity {
-
+public class AddContactsEdit extends AppCompatActivity {
     private ListView myContactEdit;
     private Button btn_Save;
     private SimpleAdapter adapter;
@@ -69,19 +65,19 @@ public class MyContactEdit extends AppCompatActivity {
                 case 1:
                     String result = msg.obj.toString();
                     if ("1".equals(result)){
-                        Toast.makeText(MyContactEdit.this,"修改成功！",Toast.LENGTH_SHORT).show();
-                        MyContactEdit.this.finish();
+                        Toast.makeText(AddContactsEdit.this,"修改成功！",Toast.LENGTH_SHORT).show();
+                        AddContactsEdit.this.finish();
 
                     }else if ("-1".equals(result)){
-                        Toast.makeText(MyContactEdit.this,"修改失败！",Toast.LENGTH_SHORT).show();
-                        MyContactEdit.this.finish();
+                        Toast.makeText(AddContactsEdit.this,"修改失败！",Toast.LENGTH_SHORT).show();
+                        AddContactsEdit.this.finish();
                     }
                     break;
                 case 2:
-                    Toast.makeText(MyContactEdit.this,"服务器错误，请重试！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddContactsEdit.this,"服务器错误，请重试！",Toast.LENGTH_SHORT).show();
                     break;
                 case 3:
-                    Toast.makeText(MyContactEdit.this,"请重新登录！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddContactsEdit.this,"请重新登录！",Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -97,19 +93,19 @@ public class MyContactEdit extends AppCompatActivity {
                 case 1:
                     String result = msg.obj.toString();
                     if ("1".equals(result)){
-                        Toast.makeText(MyContactEdit.this,"删除成功！",Toast.LENGTH_SHORT).show();
-                        MyContactEdit.this.finish();
+                        Toast.makeText(AddContactsEdit.this,"删除成功！",Toast.LENGTH_SHORT).show();
+                        AddContactsEdit.this.finish();
 
                     }else if ("-1".equals(result)){
-                        Toast.makeText(MyContactEdit.this,"删除失败！",Toast.LENGTH_SHORT).show();
-                        MyContactEdit.this.finish();
+                        Toast.makeText(AddContactsEdit.this,"删除失败！",Toast.LENGTH_SHORT).show();
+                        AddContactsEdit.this.finish();
                     }
                     break;
                 case 2:
-                    Toast.makeText(MyContactEdit.this,"服务器错误，请重试！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddContactsEdit.this,"服务器错误，请重试！",Toast.LENGTH_SHORT).show();
                     break;
                 case 3:
-                    Toast.makeText(MyContactEdit.this,"请重新登录！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddContactsEdit.this,"请重新登录！",Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -121,21 +117,21 @@ public class MyContactEdit extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_contact_edit);
+        setContentView(R.layout.activity_add_contacts_edit);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setLogo(R.mipmap.ic_launcher);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        myContactEdit = findViewById(R.id.lv_mycontact_edit_list);
-        btn_Save = findViewById(R.id.contact_edit_save);
+        myContactEdit = findViewById(R.id.lv_add_passenger_edit);
+        btn_Save = findViewById(R.id.bt_addpassenger_save);
 
         //获取传来的数据
         Intent intent = getIntent();
         Map<String,Object> contact = (HashMap<String, Object>) getIntent().getSerializableExtra("row");
 
-        data = new ArrayList<Map<String, Object>>();
+        data = new ArrayList<>();
 
         Map<String,Object> map1 = new HashMap<>();
         String name = (String) contact.get("name");
@@ -146,23 +142,23 @@ public class MyContactEdit extends AppCompatActivity {
         data.add(map1);
 
         Map<String,Object> map2 = new HashMap<>();
-        String idType = (String) contact.get("idType");
+        String idType = (String) contact.get("idCard");
         map2.put("k1","证件类型");
         //以冒号进行分割，取第一段
-        map2.put("k2",idType.split("\\：")[0]);
+        map2.put("k2",idType.split("\\:")[0]);
         map2.put("k3",R.drawable.flg_null);
         data.add(map2);
 
         Map<String,Object> map3 = new HashMap<>();
-        String idCard = (String) contact.get("id");
+        String idCard = (String) contact.get("idCard");
         map3.put("k1","证件号码");
         //以冒号进行分割，取第一段
-        map3.put("k2",idCard);
+        map3.put("k2",idCard.split("\\:")[1]);
         map3.put("k3",R.drawable.flg_null);
         data.add(map3);
 
         Map<String,Object> map4 = new HashMap<>();
-        String age = (String) contact.get("type");
+        String age = (String) contact.get("name");
         map4.put("k1","乘客类型");
         map4.put("k2",age.split("\\(")[1].split("\\)")[0]);
         map4.put("k3",R.drawable.forward_25);
@@ -171,7 +167,7 @@ public class MyContactEdit extends AppCompatActivity {
         Map<String,Object> map5 = new HashMap<>();
         String tel = (String) contact.get("tel");
         map5.put("k1","手机号");
-        map5.put("k2",tel);
+        map5.put("k2",tel.split(":")[1]);
         map5.put("k3",R.drawable.forward_25);
         data.add(map5);
 
@@ -189,9 +185,9 @@ public class MyContactEdit extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 switch(position){
                     case 0:
-                        final EditText editName = new EditText(MyContactEdit.this);
+                        final EditText editName = new EditText(AddContactsEdit.this);
                         editName.setText((String) data.get(position).get("k2"));
-                        new AlertDialog.Builder(MyContactEdit.this)
+                        new AlertDialog.Builder(AddContactsEdit.this)
                                 .setIcon(android.R.drawable.ic_dialog_info)
                                 .setTitle("请输入姓名")
                                 .setView(editName)
@@ -221,7 +217,7 @@ public class MyContactEdit extends AppCompatActivity {
                         break;
                     case 3:
                         final String[] data1 = {"成人", "学生", "儿童", "其他"};
-                        new AlertDialog.Builder(MyContactEdit.this)
+                        new AlertDialog.Builder(AddContactsEdit.this)
                                 .setTitle("请选择乘客类型")
                                 .setSingleChoiceItems(data1, 0, new DialogInterface.OnClickListener() {
                                     @Override
@@ -246,9 +242,9 @@ public class MyContactEdit extends AppCompatActivity {
                                 .show();
                         break;
                     case 4:
-                        final EditText editTel = new EditText(MyContactEdit.this);
+                        final EditText editTel = new EditText(AddContactsEdit.this);
                         editTel.setText((String) data.get(position).get("k2"));
-                        new AlertDialog.Builder(MyContactEdit.this)
+                        new AlertDialog.Builder(AddContactsEdit.this)
                                 .setIcon(android.R.drawable.ic_dialog_info)
                                 .setTitle("请输入电话号码")
                                 .setView(editTel)
@@ -270,7 +266,7 @@ public class MyContactEdit extends AppCompatActivity {
                                             Pattern p = Pattern.compile("[0-9]*");
                                             Matcher m = p.matcher(newTel);
                                             if(!m.matches() ){
-                                                Toast.makeText(MyContactEdit.this,"请输入有效电话号码", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(AddContactsEdit.this,"请输入有效电话号码", Toast.LENGTH_SHORT).show();
                                                 DialogClose.setClosable(dialog,false);
                                                 editTel.setError("请输入11位有效电话号码");
                                                 editTel.requestFocus();
@@ -298,8 +294,8 @@ public class MyContactEdit extends AppCompatActivity {
         btn_Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!NetworkUtils.checkNet(MyContactEdit.this)){
-                    Toast.makeText(MyContactEdit.this,"当前网络不可用",Toast.LENGTH_SHORT).show();
+                if (!NetworkUtils.checkNet(AddContactsEdit.this)){
+                    Toast.makeText(AddContactsEdit.this,"当前网络不可用",Toast.LENGTH_SHORT).show();
                     return;
                 }
 //                progressDialog = ProgressDialog.show(
@@ -335,11 +331,11 @@ public class MyContactEdit extends AppCompatActivity {
                         try {
                             Response response = client.newCall(request).execute();
                             String responseData = response.body().string();
-                            Log.d("MyContactEdit", "获取的服务器数据： " + responseData);
+                            Log.d("AddContactEdit", "获取的服务器数据： " + responseData);
                             if (response.isSuccessful()) {
                                 Gson gson = new GsonBuilder().create();
                                 String resultString = gson.fromJson(responseData,String.class);
-                                Log.d("MyContactEdit", "result" + resultString);
+                                Log.d("AddContactEdit", "result" + resultString);
                                 message.what = 1;
                                 message.obj = resultString;
                             } else {
@@ -374,8 +370,7 @@ public class MyContactEdit extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.my_contact_delete:
                 progressDialog = ProgressDialog.show(
-                        MyContactEdit
-                                .this,
+                        AddContactsEdit.this,
                         null,
                         "正在加载中....",
                         false,true);
@@ -406,11 +401,11 @@ public class MyContactEdit extends AppCompatActivity {
                         try {
                             Response response = client.newCall(request).execute();
                             String responseData = response.body().string();
-                            Log.d("MyContactEdit", "获取的服务器数据： " + responseData);
+                            Log.d("AddContactEdit", "获取的服务器数据： " + responseData);
                             if (response.isSuccessful()) {
                                 Gson gson = new GsonBuilder().create();
                                 String resultString = gson.fromJson(responseData,String.class);
-                                Log.d("MyContactEdit", "result" + resultString);
+                                Log.d("AddContactEdit", "result" + resultString);
                                 message.what = 1;
                                 message.obj = resultString;
                             } else {
@@ -433,5 +428,4 @@ public class MyContactEdit extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
