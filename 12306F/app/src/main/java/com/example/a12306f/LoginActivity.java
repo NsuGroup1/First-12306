@@ -19,6 +19,7 @@ import android.util.Xml;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -101,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                         if(cbLogin.isChecked()){
                             editor.putString("username",etName.getText().toString());
                             editor.putString("password",Md5Utils.MD5(etPassword.getText().toString()));
+                            editor.commit();
                         }
 //                        else {
 //
@@ -110,10 +112,8 @@ public class LoginActivity extends AppCompatActivity {
 //                        }
                         //保存
                         editor.putString("Cookie",sessionid);
-
                         //执行修改
                         editor.commit();
-
                         //跳转页面
                         Intent intent = new Intent(LoginActivity.this,ViewPagerActivity.class);
                         startActivity(intent);
@@ -160,13 +160,12 @@ public class LoginActivity extends AppCompatActivity {
 //        cbLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 //            @Override
 //            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (cbLogin.isChecked()) {
-//                    sharedPreferences.edit().putBoolean("ISCHECK", true).commit();
+//                if (cbLogin.isChecked()){
+//                    sharedPreferences.edit().putBoolean("ISCHECK",true).commit();
 //                }
 //            }
 //        });
 
-        //用户名，密码验证
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,15 +177,17 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (TextUtils.isEmpty(etPassword.getText().toString())) {
                     etPassword.setError("请输入密码");
                     etPassword.requestFocus();
-                } else if (!etName.getText().toString().equals("dong")) {
-                   Toast.makeText(LoginActivity.this,"帐号错误！",Toast.LENGTH_SHORT).show();
-                    etName.requestFocus();
-                    etName.setError("账号错误！");
-                } else if (!etPassword.getText().toString().equals("dong")) {
-                   Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
-                    etPassword.requestFocus();
-                    etPassword.setError("密码错误！");
-                } else {
+                }
+//                else if (!etName.getText().toString().equals("dong")) {
+//                   Toast.makeText(LoginActivity.this,"帐号错误！",Toast.LENGTH_SHORT).show();
+//                    etName.requestFocus();
+//                    etName.setError("账号错误！");
+//                } else if (!etPassword.getText().toString().equals("dong")) {
+//                   Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
+//                    etPassword.requestFocus();
+//                    etPassword.setError("密码错误！");
+//                }
+                else {
                         if (!NetworkUtils.checkNet(LoginActivity.this)){
                             Toast.makeText(LoginActivity.this,"网络异常！",Toast.LENGTH_SHORT).show();
                             return;//停止
@@ -197,7 +198,6 @@ public class LoginActivity extends AppCompatActivity {
                                 null,
                                 "正在加载中...",
                                 false,true);
-
 
                         new Thread(){
                             @Override

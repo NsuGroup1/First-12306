@@ -100,6 +100,7 @@ public class MyPasswordActivity extends AppCompatActivity {
                             "正在加载中....",
                             false, true);
 
+                    //修改密码
                     new Thread() {
                         @Override
                         public void run() {

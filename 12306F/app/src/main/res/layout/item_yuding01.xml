@@ -111,10 +111,10 @@
 
             <TextView
                 android:id="@+id/Seat4"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:text="软卧:200"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="left"
+                android:text="软卧:200"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="12sp" />
         </TableRow>

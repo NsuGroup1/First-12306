@@ -56,6 +56,7 @@ public class AddContactsActivity extends AppCompatActivity {
     private TextView textView_addren03;
     private ProgressDialog progressDialog;
     private SimpleAdapter adapter;
+//    private int COUNT = 0;
 
 //    private String[] name_AC = {"冬不拉(成人)","陈为飞(成人)","艾米(学生)"};
 //    private String[] ID_AC = {"123456789012345678","42092423249678320","680243223487866"};
@@ -98,8 +99,10 @@ public class AddContactsActivity extends AppCompatActivity {
                                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                                     if (b){
                                         contactData.add(list.get(position));
+//                                        COUNT++;
                                     }else {
                                         contactData.remove(position);
+//                                        COUNT--;
                                     }
                                 }
                             });
@@ -141,7 +144,6 @@ public class AddContactsActivity extends AppCompatActivity {
         textView_addren03.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent();
                 intent.putExtra("contactdata", (Serializable) contactData);
                 //startActivity(intent);
@@ -179,7 +181,7 @@ public class AddContactsActivity extends AppCompatActivity {
                             .add("action",action)
                             .build();
                     Request request = new Request.Builder()
-                            .url(Constant.Host + "/otn/TicketPassengerList")
+                            .url(Constant.Host +"/otn/TicketPassengerList")
                             .addHeader("Cookie", sessionid)
 //                            .get()
                             .post(requestBody)

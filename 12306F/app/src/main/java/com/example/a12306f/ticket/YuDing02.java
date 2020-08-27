@@ -270,6 +270,7 @@ public class YuDing02 extends AppCompatActivity {
             holder.tvSeatNum.setText(list02.get(i).get("ticketNum").toString());
             holder.tvSeatPrice.setText(list02.get(i).get("ticketPrice").toString());
             final ViewHolder finalHolder = holder;
+            final ViewHolder finalHolder1 = holder;
             holder.btn_order.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -280,6 +281,7 @@ public class YuDing02 extends AppCompatActivity {
                     intent.putExtra("TicketDate",DateTitle.getText().toString());
                     intent.putExtra("day",day);
                     intent.putExtra("FromToTime",FromToTime.getText().toString());
+                    intent.putExtra("SeatNum", finalHolder1.tvSeatNum.getText().toString());
                     intent.putExtra("Seat", finalHolder.tvSeatName.getText().toString()+"("+finalHolder.tvSeatNum.getText().toString()+")");
                     intent.putExtra("SeatPrice",finalHolder.tvSeatPrice.getText().toString());
                     startActivity(intent);

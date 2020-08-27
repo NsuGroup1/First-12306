@@ -65,6 +65,8 @@ public class YuDing03 extends AppCompatActivity {
     private ListView listView_YD03;
     private List<Map<String,Object>> list_YD03;
     private YD03Adapter yd03Adapter;
+    private String SeatNum = "";
+    private int COUNT = 0;
     private String name;
     private String ID;
     private String phone;
@@ -128,6 +130,7 @@ public class YuDing03 extends AppCompatActivity {
         textView_leixing03.setText(getIntent().getStringExtra("Seat"));
         textView_price03.setText("￥"+getIntent().getStringExtra("SeatPrice"));
         textView_price03.setTextColor(R.color.orange);
+        SeatNum = getIntent().getStringExtra("SeatNum");
 
 //        list_YD03 = new ArrayList<>();
 //        yd03Adapter = new YD03Adapter(this,list_YD03);
@@ -153,6 +156,7 @@ public class YuDing03 extends AppCompatActivity {
                 textView_jieusuan03.setTextSize(20);
             }
         });
+        COUNT = listView_YD03.getCount();
 
         textView_tijiao03.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,9 +205,14 @@ public class YuDing03 extends AppCompatActivity {
 //                        handler.sendMessage(message);
 //                    }
 //                }.start();
-                Intent intent = new Intent();
+                if (Integer.parseInt(SeatNum)<COUNT){
+                    Intent intent = new Intent();
                     intent.setClass(YuDing03.this,YuDing04.class);
                     startActivity(intent);
+                }else {
+                    Toast.makeText(YuDing03.this,"车票数量不够，请重新修改订单情况！",Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
