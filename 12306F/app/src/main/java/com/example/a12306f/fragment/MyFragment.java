@@ -110,6 +110,9 @@ public class MyFragment extends Fragment {
                                 intent.setClass(getActivity(), LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);//返回登录界面，同时清空之前的栈并开启新栈（必须同时使用）
 //                                getActivity().finish();//退出程序
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.clear();
+                                editor.commit();
                                 msg.what = 1;
                             }
                         } catch (IOException e) {
