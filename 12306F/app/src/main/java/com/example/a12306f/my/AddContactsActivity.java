@@ -80,6 +80,7 @@ public class AddContactsActivity extends AppCompatActivity {
                         map.put("name",passenger.getName()+"("+passenger.getType()+")");
                         map.put("idCard",passenger.getIdType()+":"+passenger.getId());
                         map.put("tel","电话:"+passenger.getTel());
+                        map.put("passenger",passenger);
                         list.add(map);
                     }
                     adapter = new SimpleAdapter(

@@ -162,28 +162,26 @@ public class MyFragment extends Fragment {
                                             edit.setError("密码不能为空，请输入原密码");
                                             edit.requestFocus();
                                         }else {
-                                            @SuppressLint("HandlerLeak") final Handler handler1 = new Handler(){
+                                            final Handler handler1 = new Handler(){
                                                 @Override
                                                 public void handleMessage(@NonNull Message msg) {
                                                     super.handleMessage(msg);
                                                     switch (msg.what){
                                                         case 1:
-//                                                            String account = (String) msg.obj;
+                                                            String account = (String) msg.obj;
+//
 
-//                                                            String OldPassword = account.getPassword();
-//                                                            if(OldPassword.equals(OldPassword)){
-
-//                                                            if(account.equals("1")){
-//                                                                DialogClose.setClosable(dialog,true);
-//                                                                startActivity(new Intent(getActivity(), MyPasswordActivity.class));
-//                                                            }
-//                                                            if (account.equals("0")){
-//                                                                DialogClose.setClosable(dialog,false);
-//                                                                edit.setError("密码与原密码不一致，请重新输入原密码");
-//                                                                edit.requestFocus();
-//                                                            }
-                                                            DialogClose.setClosable(dialog,true);
-                                                            startActivity(new Intent(getActivity(), MyPasswordActivity.class));
+                                                            if(account.equals("1")){
+                                                                DialogClose.setClosable(dialog,true);
+                                                                startActivity(new Intent(getActivity(), MyPasswordActivity.class));
+                                                            }
+                                                            if (account.equals("0")){
+                                                                DialogClose.setClosable(dialog,false);
+                                                                edit.setError("密码与原密码不一致，请重新输入原密码");
+                                                                edit.requestFocus();
+                                                            }
+//                                                            DialogClose.setClosable(dialog,true);
+//                                                            startActivity(new Intent(getActivity(), MyPasswordActivity.class));
                                                             break;
                                                         case 2:
 //                                                            Toast.makeText(getActivity(),"网络错误!",Toast.LENGTH_SHORT).show();
@@ -201,38 +199,7 @@ public class MyFragment extends Fragment {
                                                 @Override
                                                 public void run() {
                                                     super.run();
-//                                                    String action = "query";
-////                                                    Message msg1 = handler1.obtainMessage();
-////                                                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
-////                                                    String sessionid = sharedPreferences.getString("Cookie", "");
-////                                                    OkHttpClient client = new OkHttpClient();
-////                                                    RequestBody requestBody = new FormBody.Builder()
-////                                                            .add("action",action)
-////                                                            .build();
-////                                                    Request request = new Request.Builder()
-////                                                            .url(Constant.Host+"/otn/AccountPassword")
-////                                                            .post(requestBody)
-////                                                            .addHeader("Cookie",sessionid)
-////                                                            .build();
-////                                                    try {
-////                                                        Response response = client.newCall(request).execute();
-////                                                        String responseData = response.body().string();
-////                                                        Log.d(TAG, "获取的服务器数据： " + responseData);
-////                                                        if (response.isSuccessful()){
-////                                                            Gson gson = new GsonBuilder().create();
-////                                                            //从服务器上获取密码
-////                                                            Account account =gson.fromJson(responseData,Account.class);
-////                                                            msg1.obj = account;
-////                                                            Log.d(TAG, "resultPassword： " + msg1.obj);
-////                                                            msg1.what = 1;
-////                                                        }else {
-////                                                            msg1.what = 2;
-////                                                        }
-////                                                    } catch (IOException e) {
-////                                                        e.printStackTrace();
-////                                                        msg1.what = 2;
-////                                                    }
-////                                                    handler1.sendMessage(msg1);
+
                                                     Message message = handler1.obtainMessage();
                                                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
                                                     String sessionid = sharedPreferences.getString("Cookie", "");
@@ -258,17 +225,12 @@ public class MyFragment extends Fragment {
 //                                                            Account account = gson.fromJson(responseData,Account.class);
                                                             String account = gson.fromJson(responseData,String.class);
                                                             Log.d(TAG, "account" + account);
-                                                            if (account.equals("1")){
-                                                                message.what = 1;
-                                                            }else {
-                                                                message.what = 2;
-                                                            }
-//                                                            message.what = 1;
-//                                                            message.obj = account;
+                                                            message.what = 1;
+                                                            message.obj = account;
                                                         }
-//                                                        else {
-//                                                            message.what = 2;
-//                                                        }
+                                                        else {
+                                                            message.what = 2;
+                                                        }
                                                     } catch (IOException e) {
                                                         e.printStackTrace();
                                                         message.what = 3;

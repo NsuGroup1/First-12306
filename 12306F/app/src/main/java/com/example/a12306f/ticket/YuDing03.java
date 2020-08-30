@@ -39,7 +39,14 @@ import com.example.a12306f.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,33 +72,31 @@ public class YuDing03 extends AppCompatActivity {
     private ListView listView_YD03;
     private List<Map<String,Object>> list_YD03;
     private YD03Adapter yd03Adapter;
-    private String SeatNum = "";
-    private int COUNT = 0;
     private String name;
     private String ID;
     private String phone;
-//    private Handler handler = new Handler(){
-//        @Override
-//        public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
-//            if(progressDialog != null){
-//                progressDialog.dismiss();
-//            }
-//            switch (msg.what){
-//                case 1:
-//                    Order order = (Order) msg.obj;
-//                    Log.d("handleMessage: ", String.valueOf(order));
-//                    Intent intent = new Intent();
-//                    intent.setClass(YuDing03.this,YuDing04.class);
-//                    intent.putExtra("order",order);
-//                    startActivity(intent);
-//                    break;
-//                case 2:
-//                    Log.d("handleMessage: ", "123");
-//                    break;
-//            }
-//        }
-//    };
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(progressDialog != null){
+                progressDialog.dismiss();
+            }
+            switch (msg.what){
+                case 1:
+                    Order order = (Order) msg.obj;
+                    Log.d("handleMessage: ", String.valueOf(order));
+                    Intent intent = new Intent();
+                    intent.setClass(YuDing03.this,YuDing04.class);
+                    intent.putExtra("order",order);
+                    startActivity(intent);
+                    break;
+                case 2:
+                    Log.d("handleMessage:", "123");
+                    break;
+            }
+        }
+    };
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +135,7 @@ public class YuDing03 extends AppCompatActivity {
         textView_leixing03.setText(getIntent().getStringExtra("Seat"));
         textView_price03.setText("￥"+getIntent().getStringExtra("SeatPrice"));
         textView_price03.setTextColor(R.color.orange);
-        SeatNum = getIntent().getStringExtra("SeatNum");
+//        SeatNum = getIntent().getStringExtra("SeatNum");
 
 //        list_YD03 = new ArrayList<>();
 //        yd03Adapter = new YD03Adapter(this,list_YD03);
@@ -156,19 +161,21 @@ public class YuDing03 extends AppCompatActivity {
                 textView_jieusuan03.setTextSize(20);
             }
         });
-        COUNT = listView_YD03.getCount();
 
         textView_tijiao03.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                new Thread() {
-//                    @Override
-//                    public void run() {
-//                        super.run();
-//                        if (!NetworkUtils.checkNet(YuDing03.this)) {
-//                            Toast.makeText(YuDing03.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
-//                            return;
-//                        }
+//                Intent intent = new Intent();
+//                intent.setClass(YuDing03.this,YuDing04.class);
+//                startActivity(intent);
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        if (!NetworkUtils.checkNet(YuDing03.this)) {
+                            Toast.makeText(YuDing03.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 //                        SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
 //                        String sessionid = sharedPreferences.getString("Cookie", "");
 //                        Message message = handler.obtainMessage();
@@ -177,6 +184,8 @@ public class YuDing03 extends AppCompatActivity {
 //                                .add("trainNo", textView_liechehao03.getText().toString())
 //                                .add("startTrainDate", textView_date03.getText().toString())
 //                                .add("seatName", textView_leixing03.getText().toString())
+//                                .add("id", passengers[0].getId())
+//                                .add("idType", passengers[0].getIdType())
 //                                .build();
 //                        Request request = new Request.Builder()
 //                                .url(Constant.Host + "/otn/Order")
@@ -203,16 +212,78 @@ public class YuDing03 extends AppCompatActivity {
 //                            message.what = 2;
 //                        }
 //                        handler.sendMessage(message);
-//                    }
-//                }.start();
-                if (Integer.parseInt(SeatNum)<COUNT){
-                    Intent intent = new Intent();
-                    intent.setClass(YuDing03.this,YuDing04.class);
-                    startActivity(intent);
-                }else {
-                    Toast.makeText(YuDing03.this,"车票数量不够，请重新修改订单情况！",Toast.LENGTH_SHORT).show();
-                }
+                        Message message = handler.obtainMessage();
+                        try {
+                            URL url = new URL(Constant.Host+"/otn/Order");
+                            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                            httpURLConnection.setRequestMethod("POST");
+                            httpURLConnection.setConnectTimeout(Constant.REQUEST_TIMEOUT);
+                            httpURLConnection.setReadTimeout(Constant.SO_TIMEOUT);//读取超时 单位毫秒
+                            //发送POST方法必须设置容下两行
+                            httpURLConnection.setDoOutput(true);
+                            httpURLConnection.setDoInput(true);
 
+                            //不使用缓存
+                            httpURLConnection.setUseCaches(false);
+                            SharedPreferences sp = getSharedPreferences("user",MODE_PRIVATE);
+                            String value = sp.getString("Cookie","");
+
+                            //设置请求属性
+                            httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                            httpURLConnection.setRequestProperty("Connection", "Keep-Alive");// 维持长连接
+                            httpURLConnection.setRequestProperty("Charset", "UTF-8");
+                            httpURLConnection.setRequestProperty("Cookie",value);
+
+                            PrintWriter printWriter = new PrintWriter(httpURLConnection.getOutputStream());
+                            //发送请求数据
+//                            Log.d("zzNo",tvTicketPassengerStep3TrainNo.getText().toString());
+//                            Log.d("zzDate",tvTicketPassengerStep3Date.getText().toString().split("\\(")[0]);
+//                            Log.d("zzName",tvTicketPassengerStep3SeatName.getText().toString().split("\\(")[0]);
+                            String params = "trainNo="+ textView_liechehao03.getText().toString()+
+                                    "&startTrainDate="+ textView_date03.getText().toString().split("\\(")[0]+
+                                    "&seatName="+ textView_leixing03.getText().toString().split("\\(" )[0];
+                            for (int i=0 ; i<passengers.length ; i++){
+                                params += "&id="+ passengers[i].getId()+
+                                        "&idType=" + passengers[i].getIdType();
+                            }
+                            Log.d("params",params);
+                            Log.d("xx","这里4");
+                            printWriter.write(params);
+                            printWriter.flush();
+                            printWriter.close();
+
+                            int resultCode = httpURLConnection.getResponseCode();
+                            if (resultCode == HttpURLConnection.HTTP_OK){
+                                InputStream in = httpURLConnection.getInputStream();
+                                StringBuffer sb = new StringBuffer();
+                                String readLine = new String();
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+                                while ((readLine = reader.readLine()) != null){
+                                    sb.append(readLine).append("\n");
+                                }
+                                String result = sb.toString();
+                                Log.d("result",result);
+                                Log.d("xx","这里5");
+
+                                //解析JSON
+                                Gson gson = new GsonBuilder().create();
+                                Order orders = gson.fromJson(result,Order.class);
+                                message.what = 1;
+                                message.obj = orders;
+                                Log.d("xx,这里6", String.valueOf(orders));
+                            }else {
+                                message.what = 2;
+                            }
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                            message.what = 2;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            message.what = 2;
+                        }
+                        handler.sendMessage(message);
+                    }
+                }.start();
             }
         });
 
@@ -233,6 +304,9 @@ public class YuDing03 extends AppCompatActivity {
                 for (int i = 0; i < list_YD03.size(); i++) {
                     passengers[i] = (Passenger) list_YD03.get(i).get("passenger");
                 }
+                Log.d("YuDing03.this","size"+list_YD03.size());
+                Log.d("YuDing03.this",""+passengers[0]);
+
 
                 //TODO 计算价钱
 //                int PriceSum = Integer.parseInt(getIntent().getStringExtra("SeatPrice"));
