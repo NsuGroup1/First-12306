@@ -28,10 +28,10 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
     private Order order;
     private List<Map<String,Object>> data;
     private SimpleAdapter simpleAdapter;
-    private String[] names = {"冬不拉","陈飞"};
-    private String[] lieche = {"D5","D5"};
-    private String[] date = {"2020-6-1","2020-6-1"};
-    private String[] liechehao = {"6车51号","6车52号"};
+//    private String[] names = {"冬不拉","陈飞"};
+//    private String[] lieche = {"D5","D5"};
+//    private String[] date = {"2020-6-1","2020-6-1"};
+//    private String[] liechehao = {"6车51号","6车52号"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +42,8 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
         tvView = findViewById(R.id.view_ewm);
         lvTicket = findViewById(R.id.lv_ticket);
 
-//        order = (Order) getIntent().getSerializableExtra("order");
-//        tvOrder.setText(order.getId());
+        order = (Order) getIntent().getSerializableExtra("order");
+        tvOrder.setText(order.getId());
 
         data = new ArrayList<Map<String,Object>>();
 //        for (int i=0 ; i<order.getPassengerList().length ; i++){
@@ -54,12 +54,12 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
 //            map.put("ticket4SeatName","6车51号");
 //            data.add(map);
 //        }
-        for (int i=0 ; i<names.length ; i++){
+        for (int i=0 ; i<order.getPassengerList().length ; i++){
             Map<String,Object> map = new HashMap<>();
-            map.put("names",names[i]);
-            map.put("lieche",lieche[i]);
-            map.put("date",date[i]);
-            map.put("liechehao",liechehao[i]);
+            map.put("names",order.getPassengerList()[i].getName());
+            map.put("lieche",order.getTrain().getTrainNo());
+            map.put("date",order.getTrain().getStartTrainDate());
+            map.put("liechehao","2车"+(i+1)+"号");
             map.put("t",R.drawable.forward_25);
             data.add(map);
         }
@@ -93,8 +93,6 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
                         .show();
             }
         });
-
-
         tvView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
