@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.a12306f.R;
 import com.example.a12306f.a.Order;
+import com.example.a12306f.utils.DialogClose;
+import com.example.a12306f.utils.ZxingUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,10 +100,21 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
             public void onClick(View v) {
                 View dialogView = getLayoutInflater().inflate(R.layout.dialog_ewm,null);
                 ImageView img =  dialogView.findViewById(R.id.ewm);
+                Order order = (Order) getIntent().getSerializableExtra("order");
+                ZxingUtils.createQRImage(
+                        "订单号："+order.getId() + "," +"列车号："+ order.getTrain().getTrainNo() + "," +
+                                "出发日期："+order.getTrain().getStartTrainDate() + "," +
+                                "乘客人数："+order.getPassengerList().length + "价钱："+ order.getOrderPrice(), img,700,700);
                 new AlertDialog.Builder(TicketOrderPayedActivity.this)
                         .setIcon(R.mipmap.ic_launcher)
                         .setTitle("二维码")
                         .setView(dialogView)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DialogClose.setClosable(dialog,true);
+                            }
+                        })
                         .create()
                         .show();
             }

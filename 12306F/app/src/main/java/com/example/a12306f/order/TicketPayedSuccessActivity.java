@@ -42,9 +42,9 @@ public class TicketPayedSuccessActivity extends AppCompatActivity {
 //        Map<String,Object> contact = (HashMap<String, Object>) getIntent().getSerializableExtra("row");
         Order order = (Order) getIntent().getSerializableExtra("order");
         ZxingUtils.createQRImage(
-                order.getId() + "," + order.getTrain().getTrainNo() + "," +
-                        order.getTrain().getStartTrainDate() + "," +
-                        order.getPassengerList(), imageView,700,700
+                "订单号："+order.getId() + "," +"列车号："+ order.getTrain().getTrainNo() + "," +
+                        "出发日期："+order.getTrain().getStartTrainDate() + "," +
+                        "乘客人数："+order.getPassengerList().length + "  价钱："+ order.getOrderPrice(), imageView,700,700
 //                2020 + "," + "D5" + "," +
 //                2020 + "," +
 //                        123456, imageView,700,700
