@@ -98,8 +98,7 @@ public class StationUtils {
                 + DB_NAME, null);
         Station station = null;
 
-        Cursor c = db
-                .rawQuery(
+        Cursor c = db.rawQuery(
                         "SELECT * FROM station WHERE city=? ORDER BY sort_order limit 1",
                         new String[] { city });
 

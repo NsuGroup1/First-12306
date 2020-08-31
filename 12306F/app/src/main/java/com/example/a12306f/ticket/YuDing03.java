@@ -165,17 +165,21 @@ public class YuDing03 extends AppCompatActivity {
         textView_tijiao03.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent();
-//                intent.setClass(YuDing03.this,YuDing04.class);
-//                startActivity(intent);
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        if (!NetworkUtils.checkNet(YuDing03.this)) {
-                            Toast.makeText(YuDing03.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+
+                int tNumber = Integer.valueOf(textView_leixing03.getText().toString().split("\\(")[1].split("\\)")[0]);
+                int pNumber = list_YD03.size();
+                if (tNumber < pNumber){
+                    Toast.makeText(YuDing03.this, "剩余票数不足！", Toast.LENGTH_SHORT).show();
+                }else {
+
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            if (!NetworkUtils.checkNet(YuDing03.this)) {
+                                Toast.makeText(YuDing03.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
 //                        SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
 //                        String sessionid = sharedPreferences.getString("Cookie", "");
 //                        Message message = handler.obtainMessage();
@@ -212,78 +216,79 @@ public class YuDing03 extends AppCompatActivity {
 //                            message.what = 2;
 //                        }
 //                        handler.sendMessage(message);
-                        Message message = handler.obtainMessage();
-                        try {
-                            URL url = new URL(Constant.Host+"/otn/Order");
-                            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                            httpURLConnection.setRequestMethod("POST");
-                            httpURLConnection.setConnectTimeout(Constant.REQUEST_TIMEOUT);
-                            httpURLConnection.setReadTimeout(Constant.SO_TIMEOUT);//读取超时 单位毫秒
-                            //发送POST方法必须设置容下两行
-                            httpURLConnection.setDoOutput(true);
-                            httpURLConnection.setDoInput(true);
+                            Message message = handler.obtainMessage();
+                            try {
+                                URL url = new URL(Constant.Host + "/otn/Order");
+                                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                                httpURLConnection.setRequestMethod("POST");
+                                httpURLConnection.setConnectTimeout(Constant.REQUEST_TIMEOUT);
+                                httpURLConnection.setReadTimeout(Constant.SO_TIMEOUT);//读取超时 单位毫秒
+                                //发送POST方法必须设置容下两行
+                                httpURLConnection.setDoOutput(true);
+                                httpURLConnection.setDoInput(true);
 
-                            //不使用缓存
-                            httpURLConnection.setUseCaches(false);
-                            SharedPreferences sp = getSharedPreferences("user",MODE_PRIVATE);
-                            String value = sp.getString("Cookie","");
+                                //不使用缓存
+                                httpURLConnection.setUseCaches(false);
+                                SharedPreferences sp = getSharedPreferences("user", MODE_PRIVATE);
+                                String value = sp.getString("Cookie", "");
 
-                            //设置请求属性
-                            httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                            httpURLConnection.setRequestProperty("Connection", "Keep-Alive");// 维持长连接
-                            httpURLConnection.setRequestProperty("Charset", "UTF-8");
-                            httpURLConnection.setRequestProperty("Cookie",value);
+                                //设置请求属性
+                                httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                                httpURLConnection.setRequestProperty("Connection", "Keep-Alive");// 维持长连接
+                                httpURLConnection.setRequestProperty("Charset", "UTF-8");
+                                httpURLConnection.setRequestProperty("Cookie", value);
 
-                            PrintWriter printWriter = new PrintWriter(httpURLConnection.getOutputStream());
-                            //发送请求数据
+                                PrintWriter printWriter = new PrintWriter(httpURLConnection.getOutputStream());
+                                //发送请求数据
 //                            Log.d("zzNo",tvTicketPassengerStep3TrainNo.getText().toString());
 //                            Log.d("zzDate",tvTicketPassengerStep3Date.getText().toString().split("\\(")[0]);
 //                            Log.d("zzName",tvTicketPassengerStep3SeatName.getText().toString().split("\\(")[0]);
-                            String params = "trainNo="+ textView_liechehao03.getText().toString()+
-                                    "&startTrainDate="+ textView_date03.getText().toString().split("\\(")[0]+
-                                    "&seatName="+ textView_leixing03.getText().toString().split("\\(" )[0];
-                            for (int i=0 ; i<passengers.length ; i++){
-                                params += "&id="+ passengers[i].getId()+
-                                        "&idType=" + passengers[i].getIdType();
-                            }
-                            Log.d("params",params);
-                            Log.d("xx","这里4");
-                            printWriter.write(params);
-                            printWriter.flush();
-                            printWriter.close();
-
-                            int resultCode = httpURLConnection.getResponseCode();
-                            if (resultCode == HttpURLConnection.HTTP_OK){
-                                InputStream in = httpURLConnection.getInputStream();
-                                StringBuffer sb = new StringBuffer();
-                                String readLine = new String();
-                                BufferedReader reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
-                                while ((readLine = reader.readLine()) != null){
-                                    sb.append(readLine).append("\n");
+                                String params = "trainNo=" + textView_liechehao03.getText().toString() +
+                                        "&startTrainDate=" + textView_date03.getText().toString().split("\\(")[0] +
+                                        "&seatName=" + textView_leixing03.getText().toString().split("\\(")[0];
+                                for (int i = 0; i < passengers.length; i++) {
+                                    params += "&id=" + passengers[i].getId() +
+                                            "&idType=" + passengers[i].getIdType();
                                 }
-                                String result = sb.toString();
-                                Log.d("result",result);
-                                Log.d("xx","这里5");
+                                Log.d("params", params);
+                                Log.d("xx", "这里4");
+                                printWriter.write(params);
+                                printWriter.flush();
+                                printWriter.close();
 
-                                //解析JSON
-                                Gson gson = new GsonBuilder().create();
-                                Order orders = gson.fromJson(result,Order.class);
-                                message.what = 1;
-                                message.obj = orders;
-                                Log.d("xx,这里6", String.valueOf(orders));
-                            }else {
+                                int resultCode = httpURLConnection.getResponseCode();
+                                if (resultCode == HttpURLConnection.HTTP_OK) {
+                                    InputStream in = httpURLConnection.getInputStream();
+                                    StringBuffer sb = new StringBuffer();
+                                    String readLine = new String();
+                                    BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+                                    while ((readLine = reader.readLine()) != null) {
+                                        sb.append(readLine).append("\n");
+                                    }
+                                    String result = sb.toString();
+                                    Log.d("result", result);
+                                    Log.d("xx", "这里5");
+
+                                    //解析JSON
+                                    Gson gson = new GsonBuilder().create();
+                                    Order orders = gson.fromJson(result, Order.class);
+                                    message.what = 1;
+                                    message.obj = orders;
+                                    Log.d("xx,这里6", String.valueOf(orders));
+                                } else {
+                                    message.what = 2;
+                                }
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                                message.what = 2;
+                            } catch (IOException e) {
+                                e.printStackTrace();
                                 message.what = 2;
                             }
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                            message.what = 2;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            message.what = 2;
+                            handler.sendMessage(message);
                         }
-                        handler.sendMessage(message);
-                    }
-                }.start();
+                    }.start();
+                }
             }
         });
 
