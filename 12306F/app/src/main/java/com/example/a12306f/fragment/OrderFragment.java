@@ -230,8 +230,11 @@ public class OrderFragment extends Fragment {
                 Log.d(TAG, "获取的服务器数据： " + responseData);
                 if (response.isSuccessful()) {
                     //解析Json
-                    Gson gson = new GsonBuilder().create();
+                    Gson gson = new GsonBuilder()
+                            .setDateFormat("MMM d, yyyy, h:mm:ss a")
+                            .create();
                     Order[] orders = gson.fromJson(responseData,Order[].class);
+
                     return orders;
                 } else {
                     resultObject = "2";
