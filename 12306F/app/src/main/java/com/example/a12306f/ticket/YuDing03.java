@@ -167,11 +167,15 @@ public class YuDing03 extends AppCompatActivity {
             public void onClick(View v) {
 
                 int tNumber = Integer.valueOf(textView_leixing03.getText().toString().split("\\(")[1].split("\\)")[0]);
-                int pNumber = list_YD03.size();
-                if (tNumber < pNumber){
+//                int pNumber = ;
+                if (list_YD03 == null){
+                    Toast.makeText(YuDing03.this, "请添加乘车人！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (tNumber < list_YD03.size()){
                     Toast.makeText(YuDing03.this, "剩余票数不足！", Toast.LENGTH_SHORT).show();
-                }else {
-
+                    return;
+                }else{
                     new Thread() {
                         @Override
                         public void run() {
@@ -180,6 +184,7 @@ public class YuDing03 extends AppCompatActivity {
                                 Toast.makeText(YuDing03.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
                                 return;
                             }
+
 //                        SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
 //                        String sessionid = sharedPreferences.getString("Cookie", "");
 //                        Message message = handler.obtainMessage();
@@ -270,7 +275,8 @@ public class YuDing03 extends AppCompatActivity {
                                     Log.d("xx", "这里5");
 
                                     //解析JSON
-                                    Gson gson = new GsonBuilder().create();
+                                    Gson gson = new GsonBuilder()
+                                            .create();
                                     Order orders = gson.fromJson(result, Order.class);
                                     message.what = 1;
                                     message.obj = orders;

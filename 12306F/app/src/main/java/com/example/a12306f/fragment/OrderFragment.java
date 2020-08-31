@@ -1,15 +1,9 @@
 package com.example.a12306f.fragment;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,13 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.a12306f.R;
 import com.example.a12306f.a.Order;
-import com.example.a12306f.a.Train;
 import com.example.a12306f.adapter.OrderAdapter;
 import com.example.a12306f.order.TicketNeedPayActivity;
 import com.example.a12306f.order.TicketOrderPayedActivity;
@@ -230,7 +226,8 @@ public class OrderFragment extends Fragment {
                 Log.d(TAG, "获取的服务器数据： " + responseData);
                 if (response.isSuccessful()) {
                     //解析Json
-                    Gson gson = new GsonBuilder().create();
+                    Gson gson = new GsonBuilder()
+                            .create();
                     Order[] orders = gson.fromJson(responseData,Order[].class);
                     return orders;
                 } else {
