@@ -178,16 +178,6 @@ public class LoginActivity extends AppCompatActivity {
             cbLogin.setChecked(true);
         }
 
-        if (!NetworkUtils.checkNet(LoginActivity.this)){
-            Toast.makeText(LoginActivity.this,"网络异常！",Toast.LENGTH_SHORT).show();
-            return;//停止
-        }
-        // 进度对话框
-        progressDialog = ProgressDialog.show(
-                LoginActivity.this,
-                null,
-                "正在加载中...",
-                false,true);
 
         new Thread(){
             @Override
@@ -270,31 +260,16 @@ public class LoginActivity extends AppCompatActivity {
                     etPassword.setError("请输入密码");
                     etPassword.requestFocus();
                 }
-                else if (!etName.getText().toString().equals("dong")) {
-                   Toast.makeText(LoginActivity.this,"帐号错误！",Toast.LENGTH_SHORT).show();
-                    etName.requestFocus();
-                    etName.setError("账号错误！");
-                } else if (!etPassword.getText().toString().equals("dong")) {
-                   Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
-                    etPassword.requestFocus();
-                    etPassword.setError("密码错误！");
-                }
+//                else if (!etName.getText().toString().equals("dong")) {
+//                   Toast.makeText(LoginActivity.this,"帐号错误！",Toast.LENGTH_SHORT).show();
+//                    etName.requestFocus();
+//                    etName.setError("账号错误！");
+//                } else if (!etPassword.getText().toString().equals("dong")) {
+//                   Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
+//                    etPassword.requestFocus();
+//                    etPassword.setError("密码错误！");
+//                }
                 else {
-                    if (!TextUtils.isEmpty(etName.getText().toString())){
-                        cbLogin.setChecked(true);
-                    }
-
-                    if (!NetworkUtils.checkNet(LoginActivity.this)){
-                        Toast.makeText(LoginActivity.this,"网络异常！",Toast.LENGTH_SHORT).show();
-                        return;//停止
-                    }
-                    // 进度对话框
-                    progressDialog = ProgressDialog.show(
-                            LoginActivity.this,
-                            null,
-                            "正在加载中...",
-                            false,true);
-
                     new Thread(){
                         @Override
                         public void run() {
@@ -363,6 +338,7 @@ public class LoginActivity extends AppCompatActivity {
                             handler.sendMessage(message);
                         }
                     }.start();
+
                         if (cbLogin.isChecked()){
                             String name = etName.getText().toString();
                             String psw = etPassword.getText().toString();
