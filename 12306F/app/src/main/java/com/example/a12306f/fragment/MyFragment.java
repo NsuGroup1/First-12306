@@ -172,14 +172,13 @@ public class MyFragment extends Fragment {
                                                     switch (msg.what){
                                                         case 1:
                                                             String account = (String) msg.obj;
-//
-
                                                             if(account.equals("1")){
                                                                 DialogClose.setClosable(dialog,true);
                                                                 startActivity(new Intent(getActivity(), MyPasswordActivity.class));
                                                             }
                                                             if (account.equals("0")){
                                                                 DialogClose.setClosable(dialog,false);
+                                                                Toast.makeText(getActivity(),"密码与原密码不一致，请重新输入原密码",Toast.LENGTH_SHORT).show();
                                                                 edit.setError("密码与原密码不一致，请重新输入原密码");
                                                                 edit.requestFocus();
                                                             }

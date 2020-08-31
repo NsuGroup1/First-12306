@@ -246,6 +246,7 @@ public class OrderFragment extends Fragment {
         protected void onPostExecute(Object result) {
             super.onPostExecute(result);
             if (result instanceof Order[]){
+
                 data.clear();
                 orders = (Order[]) result;
                 for (Order order:orders){
@@ -254,12 +255,15 @@ public class OrderFragment extends Fragment {
                     switch (order.getStatus()){
                         case 0:
                             map.put("orderStatus","未支付");
+                            map.put("orderFlag",R.drawable.forward_25);
                             break;
                         case 1:
                             map.put("orderStatus","已支付");
+                            map.put("orderFlag",R.drawable.forward_25);
                             break;
                         case 2:
                             map.put("orderStatus","已取消");
+                            map.put("orderFlag",R.drawable.flg_null);
                             break;
                     }
                     map.put("orderTrainNo",order.getTrain().getTrainNo());
@@ -267,7 +271,7 @@ public class OrderFragment extends Fragment {
                     map.put("orderStationFrom",order.getTrain().getFromStationName()+"-"+order.getTrain().getToStationName()+
                             " "+ order.getPassengerList().length + "人");
                     map.put("orderPrice","￥"+order.getOrderPrice());
-                    map.put("orderFlag",R.drawable.forward_25);
+
                     data.add(map);
                 }
                 orderAdapter.notifyDataSetChanged();

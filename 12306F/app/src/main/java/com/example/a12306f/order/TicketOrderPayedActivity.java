@@ -102,9 +102,11 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
                 ImageView img =  dialogView.findViewById(R.id.ewm);
                 Order order = (Order) getIntent().getSerializableExtra("order");
                 ZxingUtils.createQRImage(
-                        "订单号："+order.getId() + "," +"列车号："+ order.getTrain().getTrainNo() + "," +
-                                "出发日期："+order.getTrain().getStartTrainDate() + "," +
-                                "乘客人数："+order.getPassengerList().length + "价钱："+ order.getOrderPrice(), img,700,700);
+                        "订单号："+order.getId() + "," +
+                                "   列车号："+ order.getTrain().getTrainNo() + "," +
+                                "   出发日期："+order.getTrain().getStartTrainDate() + "," +
+                                "   乘客人数："+order.getPassengerList().length +
+                                "   总价："+ order.getOrderPrice(), img,700,700);
                 new AlertDialog.Builder(TicketOrderPayedActivity.this)
                         .setIcon(R.mipmap.ic_launcher)
                         .setTitle("二维码")

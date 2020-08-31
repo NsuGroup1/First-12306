@@ -270,16 +270,99 @@ public class LoginActivity extends AppCompatActivity {
                     etPassword.setError("请输入密码");
                     etPassword.requestFocus();
                 }
-//                else if (!etName.getText().toString().equals("dong")) {
-//                   Toast.makeText(LoginActivity.this,"帐号错误！",Toast.LENGTH_SHORT).show();
-//                    etName.requestFocus();
-//                    etName.setError("账号错误！");
-//                } else if (!etPassword.getText().toString().equals("dong")) {
-//                   Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
-//                    etPassword.requestFocus();
-//                    etPassword.setError("密码错误！");
-//                }
+                else if (!etName.getText().toString().equals("dong")) {
+                   Toast.makeText(LoginActivity.this,"帐号错误！",Toast.LENGTH_SHORT).show();
+                    etName.requestFocus();
+                    etName.setError("账号错误！");
+                } else if (!etPassword.getText().toString().equals("dong")) {
+                   Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
+                    etPassword.requestFocus();
+                    etPassword.setError("密码错误！");
+                }
                 else {
+                    if (!TextUtils.isEmpty(etName.getText().toString())){
+                        cbLogin.setChecked(true);
+                    }
+
+                    if (!NetworkUtils.checkNet(LoginActivity.this)){
+                        Toast.makeText(LoginActivity.this,"网络异常！",Toast.LENGTH_SHORT).show();
+                        return;//停止
+                    }
+                    // 进度对话框
+                    progressDialog = ProgressDialog.show(
+                            LoginActivity.this,
+                            null,
+                            "正在加载中...",
+                            false,true);
+
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            String result = "";
+                            Message message = handler.obtainMessage();
+
+                            OkHttpClient client = new OkHttpClient();
+                            RequestBody requestBody = new FormBody.Builder()
+                                    .add("username", etName.getText().toString())
+                                    .add("password", Md5Utils.MD5(etPassword.getText().toString()))
+                                    .build();
+                            Request request = new Request.Builder()
+                                    .url(Constant.Host+"/Login")
+                                    .post(requestBody)
+                                    .build();
+
+                            try {
+                                Response response = client.newCall(request).execute();
+                                Log.d(TAG,"response:");
+                                String responsedata = response.body().string();
+                                Log.d(TAG,"获取服务器数据:"+responsedata);
+
+                                //解析成功接收到的数据
+                                if (response.isSuccessful()) {
+                                    //pull解析
+                                    //生成解析器
+                                    XmlPullParser parser = Xml.newPullParser();
+                                    //引入要解析的流
+                                    parser.setInput(new StringReader(responsedata));
+                                    //事件类型解析
+                                    int type = parser.getEventType();
+                                    while (type!=XmlPullParser.END_DOCUMENT){
+                                        switch (type){
+                                            case XmlPullParser.START_TAG:
+                                                if ("result".equals(parser.getName())){
+                                                    result = parser.nextText();
+                                                    Log.d(TAG,"result"+result);
+                                                }
+                                                break;
+                                        }
+                                        type = parser.next();
+                                    }
+                                    //读取sessionid
+                                    Headers headers = response.headers();
+                                    Log.d(TAG,"headers:"+headers);
+                                    List<String> cookies = headers.values("Set-Cookie");
+                                    Log.d(TAG,"Set-Cookie:"+cookies);
+                                    String session = cookies.get(0);
+                                    Log.d(TAG,"onResponse-size:"+session);
+                                    String sessionid = session.substring(0,session.indexOf(";"));
+                                    Log.d(TAG,"session is:"+sessionid);
+                                    //发送消息
+                                    message.what = 1;
+                                    message.arg1 = Integer.parseInt(result);
+                                    message.obj = sessionid;
+
+                                } else {
+                                    message.what = 2;
+                                    Log.d(TAG,"what2:");
+                                }
+                            } catch (XmlPullParserException | IOException e) {
+                                e.printStackTrace();
+                                message.what = 2;
+                                Log.d(TAG,"what2:");
+                            }
+                            handler.sendMessage(message);
+                        }
+                    }.start();
                         if (cbLogin.isChecked()){
                             String name = etName.getText().toString();
                             String psw = etPassword.getText().toString();
