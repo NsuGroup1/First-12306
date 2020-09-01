@@ -62,6 +62,7 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
             map.put("lieche",order.getTrain().getTrainNo());
             map.put("date",order.getTrain().getStartTrainDate());
             map.put("liechehao","2车"+(i+1)+"号");
+//            map.put("liechehao",order.getPassengerList()[i].getSeat().getSeatNO());
             map.put("t",R.drawable.forward_25);
             data.add(map);
         }

@@ -447,7 +447,7 @@ public class MyContactAdd extends AppCompatActivity {
                                             String str2= newId.substring(newId.length());
                                             Pattern p = Pattern.compile("[0-9]*");
                                             Pattern p2 = Pattern.compile("[0-9]*");
-                                            Pattern p1 = Pattern.compile("X");
+                                            Pattern p1 = Pattern.compile("[X]");
                                             Matcher m = p.matcher(str);//比较
                                             Matcher m1 = p1.matcher(str1);
                                             Matcher m2 = p2.matcher(str2);

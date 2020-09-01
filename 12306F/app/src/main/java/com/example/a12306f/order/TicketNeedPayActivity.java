@@ -1,5 +1,6 @@
 package com.example.a12306f.order;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -48,6 +49,8 @@ public class TicketNeedPayActivity extends AppCompatActivity {
 
     private TextView tvNeedPayId, tvCancelOrder, tvConfirmOrder;
     private ListView lv_order_list_need_pay;
+
+    @SuppressLint("HandlerLeak")
     private Handler handler1 = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -66,6 +69,7 @@ public class TicketNeedPayActivity extends AppCompatActivity {
             }
         }
     };
+    @SuppressLint("HandlerLeak")
     private Handler handler2 = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -99,6 +103,7 @@ public class TicketNeedPayActivity extends AppCompatActivity {
         lv_order_list_need_pay = findViewById(R.id.lv_ticket_order_need_pay);
 
         order = (Order) getIntent().getSerializableExtra("order");
+        Log.d(TAG, "order1111:"+order);
         tvNeedPayId.setText(order.getId());
 
         data = new ArrayList<>();
@@ -108,6 +113,7 @@ public class TicketNeedPayActivity extends AppCompatActivity {
             map.put("lieche",order.getTrain().getTrainNo());
             map.put("date",order.getTrain().getStartTrainDate());
             map.put("liechehao","5车"+(i+1)+"号");
+//            map.put("liechehao",order.getPassengerList()[i].getSeat().getSeatNO());
             data.add(map);
         }
         simpleAdapter = new SimpleAdapter(TicketNeedPayActivity.this,

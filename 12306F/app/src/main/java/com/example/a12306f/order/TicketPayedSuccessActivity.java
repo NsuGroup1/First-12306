@@ -3,11 +3,14 @@ package com.example.a12306f.order;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.a12306f.R;
@@ -31,12 +34,18 @@ public class TicketPayedSuccessActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_payed_success);
 
+        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setLogo(R.mipmap.ic_launcher);
+//        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setLogo(R.mipmap.ic_launcher);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+
         imageView = findViewById(R.id.ewm);
         back = findViewById(R.id.ticket_success_back);
         tv_ticket_success = findViewById(R.id.ticket_success_order);
         order = (Order) getIntent().getSerializableExtra("order");
         tv_ticket_success.setText(order.getId());
-
 
         //创建二维码
 //        Map<String,Object> contact = (HashMap<String, Object>) getIntent().getSerializableExtra("row");
@@ -58,5 +67,15 @@ public class TicketPayedSuccessActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
