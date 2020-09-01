@@ -123,6 +123,7 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
                                                 String result = msg.obj.toString();
                                                 if ("1".equals(result)) {
                                                     simpleAdapter.notifyDataSetChanged();
+                                                    Log.d(TAG,"order.get(orderStatus)1 "+order.getStatus());
                                                     finish();
                                                     Toast.makeText(TicketOrderPayedActivity.this, "退票成功!", Toast.LENGTH_LONG).show();
                                                 }else {
@@ -168,6 +169,7 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
                                                     String result = gson.fromJson(responseData,String.class);
                                                     Log.d(TAG, "result： " + result);
                                                     Log.d(TAG,"order:"+order);
+                                                    Log.d(TAG,"order.get(orderStatus)"+order.getStatus());
                                                     msg.what = 1;
                                                     msg.obj = result;
                                                 }else {

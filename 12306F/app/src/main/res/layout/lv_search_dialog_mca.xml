@@ -7,9 +7,9 @@
         android:id="@+id/TV_name_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="TextView"
-        android:textSize="20sp"
-        android:gravity="center"/>
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/TV_phone_search"

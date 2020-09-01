@@ -62,6 +62,8 @@ public class MyContactAdd extends AppCompatActivity {
     String[] k1 = {"姓名","证件类型","证件号码","乘客类型","手机号"};
     String[] k2 = {""};
     Integer[] k3 = {R.drawable.forward_25};
+    String[] search1 = {"a","b"};
+    String[] search2 = {"1234","12344"};
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,7 +75,7 @@ public class MyContactAdd extends AppCompatActivity {
     private ListView listView_dialog;
 //    private List<String> mContactsName = new ArrayList<>();
 //    private List<String> mContactsPhone = new ArrayList<>();
-    private SimpleAdapter searchAdapter;
+//    private SimpleAdapter searchAdapter;
     private List<HashMap<String,Object>> searchData;
     private String[] value_search;
 
@@ -85,15 +87,30 @@ public class MyContactAdd extends AppCompatActivity {
                 break;
             case R.id.my_contact_search:
                 contentResolver = getContentResolver();
-                listView_dialog = findViewById(R.id.lv_AMC_dialog_search);
-                searchAdapter = new SimpleAdapter(this,searchData,R.layout.lv_search_dialog_mca,
-                        new String[]{"name","number"},new int[]{R.id.TV_name_search,R.id.TV_phone_search});
+                View searchView = getLayoutInflater().inflate(R.layout.dialog_mycontact_search,null);
+
+//                View view = this.getLayoutInflater().inflate(R.layout.dialog_mycontact_search,null);
+                listView_dialog = searchView.findViewById(R.id.lv_AMC_dialog_search);
+                searchData = new ArrayList<>();
+                SimpleAdapter searchAdapter = new SimpleAdapter(MyContactAdd.this
+                        ,searchData
+                        ,R.layout.lv_search_dialog_mca
+                        ,new String[]{"display_name","_id"}
+                        ,new int[]{R.id.TV_name_search,R.id.TV_phone_search});
+//                listView_dialog.setAdapter(searchAdapter);
+
+//                for (int i = 0;i<search1.length;i++){
+//                    Map<String,Object> map = new HashMap<>();
+//                    map.put("name",search1[i]);
+//                    map.put("number",search2[i]);
+//                    searchData.add((HashMap<String, Object>) map);
+//                }
                 listView_dialog.setAdapter(searchAdapter);
                 listView_dialog.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String name_lv = searchData.get(position).get("name").toString();
-                        String phone = searchData.get(position).get("number").toString();
+                        String name_lv = searchData.get(position).get("display_name").toString();
+                        String phone = searchData.get(position).get("_id").toString();
                         value_search= new String[]{name_lv, "", "", "", phone};
                         for (int i = 0;i<value_search.length;i++){
                             HashMap map_search = new HashMap();
@@ -132,24 +149,24 @@ public class MyContactAdd extends AppCompatActivity {
                     int _id = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                     String display_name = cursor.getString(cursor.getColumnIndex("display_name"));
                     Log.d("My12306",_id+","+display_name);
-                    map1.put("name",display_name);
+                    map1.put("display_name",display_name);
 //                    mContactsName.add(display_name);
                     Cursor cursor2 = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID+"="+_id,
+                            null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID+"=?"+_id,
                             new String[]{_id+""},null);//传入联系人_id
                     //获取电话
                     String number = null;
                     while (cursor2.moveToNext()){
                         number = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 //                        mContactsPhone.add(number);
-                        map1.put("number",number);
+                        map1.put("_id",number);
                     }
                     cursor2.close();
                     searchData.add(map1);
                 }
                 cursor.close();
 
-                View searchView = getLayoutInflater().inflate(R.layout.dialog_mycontact_search,null);
+//                View searchView = getLayoutInflater().inflate(R.layout.dialog_mycontact_search,null);
 
                 new AlertDialog.Builder(MyContactAdd.this)
                         .setTitle("请选择")
