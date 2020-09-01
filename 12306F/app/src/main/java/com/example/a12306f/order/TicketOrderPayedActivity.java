@@ -120,8 +120,9 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
                                         switch (msg.what){
                                             case 1:
                                                 String result = msg.obj.toString();
-                                                if ("-1".equals(result)) {
+                                                if ("1".equals(result)) {
                                                     simpleAdapter.notifyDataSetChanged();
+                                                    finish();
                                                     Toast.makeText(TicketOrderPayedActivity.this, "退票成功!", Toast.LENGTH_LONG).show();
                                                 }else {
                                                     Toast.makeText(TicketOrderPayedActivity.this,"退票失败！",Toast.LENGTH_SHORT).show();
