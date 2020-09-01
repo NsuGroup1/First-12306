@@ -276,6 +276,7 @@ public class YuDing03 extends AppCompatActivity {
 
                                     //解析JSON
                                     Gson gson = new GsonBuilder()
+                                            .setDateFormat("MMM d, yyyy, h:mm:ss a")
                                             .create();
                                     Order orders = gson.fromJson(result, Order.class);
                                     message.what = 1;
