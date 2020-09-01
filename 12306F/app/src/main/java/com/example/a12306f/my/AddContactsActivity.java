@@ -120,10 +120,11 @@ public class AddContactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contacts);
 
-        ActionBar actionBar = this.getSupportActionBar();
-        actionBar.setTitle("添加联系人" );
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setLogo(R.mipmap.ic_launcher);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+
 
         listView = findViewById(R.id.addcontacts_lv03);
         textView_addren03 = findViewById(R.id.textView_add_adcts);

@@ -154,6 +154,7 @@ public class YuDing03 extends AppCompatActivity {
                 list_YD03.remove(position);
                 yd03Adapter.notifyDataSetChanged();
                 listView_YD03.invalidate();
+                Log.d(TAG, "on   "+list_YD03.size());
 
                 String money = textView_price03.getText().toString().split("￥")[1].split("\\.")[0];
                 int m = Integer.valueOf(money);
@@ -167,8 +168,7 @@ public class YuDing03 extends AppCompatActivity {
             public void onClick(View v) {
 
                 int tNumber = Integer.valueOf(textView_leixing03.getText().toString().split("\\(")[1].split("\\)")[0]);
-//                int pNumber = ;
-                if (list_YD03 == null){
+                if (list_YD03 == null || list_YD03.size() == 0){
                     Toast.makeText(YuDing03.this, "请添加乘车人！", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -184,7 +184,10 @@ public class YuDing03 extends AppCompatActivity {
                                 Toast.makeText(YuDing03.this, "当前网络不可用", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-
+                            passengers = new Passenger[list_YD03.size()];
+                            for (int i = 0; i < list_YD03.size(); i++) {
+                                passengers[i] = (Passenger) list_YD03.get(i).get("passenger");
+                            }
 //                        SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
 //                        String sessionid = sharedPreferences.getString("Cookie", "");
 //                        Message message = handler.obtainMessage();
@@ -310,14 +313,13 @@ public class YuDing03 extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, datalist);
         switch (resultCode) {
             case RESULT_OK:
-                list_YD03 = new ArrayList<Map<String, Object>>();
+//                list_YD03 = new ArrayList<Map<String, Object>>();
                 list_YD03 = (List<Map<String, Object>>) datalist.getSerializableExtra("contactdata");
                 passengers = new Passenger[list_YD03.size()];
                 for (int i = 0; i < list_YD03.size(); i++) {
                     passengers[i] = (Passenger) list_YD03.get(i).get("passenger");
                 }
                 Log.d("YuDing03.this","size"+list_YD03.size());
-                Log.d("YuDing03.this",""+passengers[0]);
 
 
                 //TODO 计算价钱

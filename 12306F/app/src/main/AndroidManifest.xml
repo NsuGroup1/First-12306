@@ -22,7 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".my.AddContactAdd"></activity>
-        <activity android:name=".my.AddContactsEdit" />
+        <activity android:name=".my.AddContactsEdit"
+            android:label="乘车人信息修改"/>
         <activity android:name=".order.TicketInfoFragment" />
         <activity android:name=".order.TicketOrderPayedActivity" />
         <activity
@@ -43,10 +44,8 @@
         <activity
             android:name=".order.TicketPayedSuccessActivity"
             android:label="5/5预定" />
-        <activity android:name=".order.TicketNeedPayActivity" />
-        <activity
-            android:name=".my.ACA03AddActivity"
-            android:label="添加乘车人" />
+        <activity android:name=".order.TicketNeedPayActivity"
+            android:label="未支付订单"/>
         <activity
             android:name=".my.AddContactsActivity"
             android:label="添加乘车人" />

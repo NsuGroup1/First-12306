@@ -116,22 +116,13 @@ public class OrderFragment extends Fragment {
                     intent.putExtra("order",orders[position]);
                     intent.setClass(getActivity(),TicketNeedPayActivity.class);
                     intent.putExtra("order",orders[position]);
+                    Log.d(TAG, "onItemClick order" + orders);
                     startActivity(intent);
                 }else if (data.get(position).get("orderStatus").toString().equals("已支付")){
                     intent.setClass(getActivity(), TicketOrderPayedActivity.class);
                     intent.putExtra("order",orders[position]);
                     startActivity(intent);
                 }
-//                switch (position) {
-//                    case 0:
-//                        intent.setClass(getActivity(), TicketNeedPayActivity.class);
-//                        startActivity(intent);
-//                        break;
-//                    case 1:
-//                        intent.setClass(getActivity(), TicketOrderPayedActivity.class);
-//                        startActivity(intent);
-//                        break;
-//                }
             }
         });
     }
@@ -202,7 +193,6 @@ public class OrderFragment extends Fragment {
                 return;
             }
         }
-
         @Override
         protected Object doInBackground(String... strings) {
             String resultObject = "";

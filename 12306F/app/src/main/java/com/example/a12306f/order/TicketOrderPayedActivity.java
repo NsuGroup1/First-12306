@@ -85,6 +85,7 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
             map.put("id_TOP",order.getPassengerList()[i].getId());
             map.put("type_TOP",order.getPassengerList()[i].getType());
             map.put("liechehao","2车"+(i+1)+"号");
+//            map.put("liechehao",order.getPassengerList()[i].getSeat().getSeatNO());
             map.put("t",R.drawable.forward_25);
             data.add(map);
         }

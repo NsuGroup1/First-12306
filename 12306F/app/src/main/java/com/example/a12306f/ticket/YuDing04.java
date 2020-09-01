@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +51,7 @@ public class YuDing04 extends AppCompatActivity {
     private TextView TV_zanbu,TV_queren,TV_ticketId;
     private Order order;
     private ProgressDialog progressDialog;
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -104,6 +107,7 @@ public class YuDing04 extends AppCompatActivity {
             TV_queren = findViewById(R.id.TV_querenpay_YD04);
             TV_ticketId = findViewById(R.id.ticket_id);
             order = (Order) getIntent().getSerializableExtra("order");
+            Log.d(TAG, "yuding4order: "+order);
             TV_ticketId.setText(order.getId());
 
             data = new ArrayList<>();
@@ -112,7 +116,7 @@ public class YuDing04 extends AppCompatActivity {
                 map.put("names",order.getPassengerList()[i].getName());
                 map.put("lieche",order.getTrain().getTrainNo());
                 map.put("date",order.getTrain().getStartTrainDate());
-                map.put("liechehao","5车"+i+"号");
+                map.put("liechehao","5车"+(i+1)+"号");
                 data.add(map);
             }
             simpleAdapter = new SimpleAdapter(this,data,R.layout.item_yuding04,
@@ -120,7 +124,6 @@ public class YuDing04 extends AppCompatActivity {
                     new int[]{R.id.textView_name_YD04,R.id.textView_lieche_YD04,R.id.textView_date_YD04,
                             R.id.textView_liechehao_YD04});
             listView.setAdapter(simpleAdapter);
-
 
             TV_zanbu.setOnClickListener(new View.OnClickListener() {
                 @Override
