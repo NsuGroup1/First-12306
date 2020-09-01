@@ -43,7 +43,7 @@ import okhttp3.Response;
 
 public class OrderFragment extends Fragment {
 
-    final String TAG = "getActivity";
+    final String TAG = "OrderFragment";
     private TextView tvWaitToPay, tvAll;
     private ListView lvOrder;
     private List<Map<String, Object>> data;
@@ -217,6 +217,7 @@ public class OrderFragment extends Fragment {
                 if (response.isSuccessful()) {
                     //解析Json
                     Gson gson = new GsonBuilder()
+                            .setDateFormat("MMM d, yyyy, h:mm:ss a")
                             .create();
                     Order[] orders = gson.fromJson(responseData,Order[].class);
                     return orders;
