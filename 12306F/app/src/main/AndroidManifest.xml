@@ -21,11 +21,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".my.AddContactAdd"></activity>
+        <activity android:name=".my.AddContactAdd"
+            android:label="添加乘车人"></activity>
         <activity android:name=".my.AddContactsEdit"
             android:label="乘车人信息修改"/>
         <activity android:name=".order.TicketInfoFragment" />
-        <activity android:name=".order.TicketOrderPayedActivity" />
+        <activity android:name=".order.TicketOrderPayedActivity"
+            android:label="已支付订单"/>
         <activity
             android:name=".my.MyContactEdit"
             android:label="编辑联系人" />
@@ -43,7 +45,7 @@
             android:label="我的联系人" />
         <activity
             android:name=".order.TicketPayedSuccessActivity"
-            android:label="5/5预定" />
+            android:label="车票预定5/5" />
         <activity android:name=".order.TicketNeedPayActivity"
             android:label="未支付订单"/>
         <activity
