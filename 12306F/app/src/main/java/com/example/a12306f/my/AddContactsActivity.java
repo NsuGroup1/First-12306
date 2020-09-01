@@ -1,5 +1,6 @@
 package com.example.a12306f.my;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -62,6 +63,7 @@ public class AddContactsActivity extends AppCompatActivity {
 //    private String[] ID_AC = {"123456789012345678","42092423249678320","680243223487866"};
 //    private String[] phone_AC = {"12345678901","67886867687","57546754378"};
 
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -234,5 +236,4 @@ public class AddContactsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

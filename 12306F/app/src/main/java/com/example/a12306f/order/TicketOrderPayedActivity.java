@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -18,17 +20,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.example.a12306f.R;
+import com.example.a12306f.ViewPagerActivity;
 import com.example.a12306f.a.Order;
+import com.example.a12306f.a.Passenger;
+import com.example.a12306f.fragment.OrderFragment;
 import com.example.a12306f.my.MyContactAdd;
 import com.example.a12306f.utils.Constant;
 import com.example.a12306f.utils.DialogClose;
 import com.example.a12306f.utils.ZxingUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +56,6 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
     private List<Map<String,Object>> data;
     private SimpleAdapter simpleAdapter;
     final String TAG = "TicketOrderPayedActivity";
-
 //    private String[] names = {"冬不拉","陈飞"};
 //    private String[] lieche = {"D5","D5"};
 //    private String[] date = {"2020-6-1","2020-6-1"};
@@ -61,6 +67,11 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_order_payed);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setLogo(R.mipmap.ic_launcher);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+
         tvOrder = findViewById(R.id.ticket_number);
         tvView = findViewById(R.id.view_ewm);
         lvTicket = findViewById(R.id.lv_ticket);
@@ -68,15 +79,7 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
         order = (Order) getIntent().getSerializableExtra("order");
         tvOrder.setText(order.getId());
 
-        data = new ArrayList<Map<String,Object>>();
-//        for (int i=0 ; i<order.getPassengerList().length ; i++){
-//            Map<String,Object> map = new HashMap<>();
-//            map.put("ticket4Name",order.getPassengerList()[i].getName());
-//            map.put("ticket4No",order.getTrain().getTrainNo());
-//            map.put("ticket4Date",order.getTrain().getStartTrainDate());
-//            map.put("ticket4SeatName","6车51号");
-//            data.add(map);
-//        }
+        data = new ArrayList<>();
         for (int i=0 ; i<order.getPassengerList().length ; i++){
             Map<String,Object> map = new HashMap<>();
             map.put("names",order.getPassengerList()[i].getName());
@@ -85,8 +88,6 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
             map.put("id_TOP",order.getPassengerList()[i].getId());
             map.put("type_TOP",order.getPassengerList()[i].getType());
             map.put("liechehao","2车"+(i+1)+"号");
-//            map.put("liechehao",order.getPassengerList()[i].getSeat().getSeatNO());
-            map.put("t",R.drawable.forward_25);
             data.add(map);
         }
         simpleAdapter = new SimpleAdapter(TicketOrderPayedActivity.this,
@@ -96,6 +97,7 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
                 new int[]{R.id.textView_name_YD04,R.id.textView_lieche_YD04,R.id.textView_date_YD04,R.id.textView_liechehao_YD04});
         lvTicket.setAdapter(simpleAdapter);
         Log.d(TAG,"order:"+order);
+
         lvTicket.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -110,20 +112,22 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
                                 simpleAdapter.notifyDataSetChanged();
                             }
                         })
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @SuppressLint("LongLogTag")
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                final Handler handler= new Handler(){
+                            public void onClick(final DialogInterface dialogInterface, final int i) {
+                                @SuppressLint("HandlerLeak") final Handler handler= new Handler(){
                                     @Override
                                     public void handleMessage(@NonNull Message msg) {
                                         super.handleMessage(msg);
                                         switch (msg.what){
                                             case 1:
                                                 String result = msg.obj.toString();
-                                                if ("-1".equals(result)) {
-                                                    simpleAdapter.notifyDataSetChanged();
+                                                if ("1".equals(result)) {
+//                                                    data.remove(position);
+//                                                    simpleAdapter.notifyDataSetChanged();
                                                     Toast.makeText(TicketOrderPayedActivity.this, "退票成功!", Toast.LENGTH_LONG).show();
+                                                    finish();
                                                 }else {
                                                     Toast.makeText(TicketOrderPayedActivity.this,"退票失败！",Toast.LENGTH_SHORT).show();
                                                 }
@@ -131,60 +135,93 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
                                             case 2:
                                                 Toast.makeText(TicketOrderPayedActivity.this, "网络问题！", Toast.LENGTH_LONG).show();
                                                 break;
+                                            case 3:
+                                                Toast.makeText(TicketOrderPayedActivity.this, "请重新登录！", Toast.LENGTH_LONG).show();
+                                                break;
                                         }
                                     }
                                 };
                                 Log.d(TAG,"i:"+i);
-                                if (i==-1){
-                                    new Thread(){
-                                        @SuppressLint("LongLogTag")
-                                        @Override
-                                        public void run() {
-                                            super.run();
-                                            Message msg = handler.obtainMessage();
-                                            SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
-                                            String sessionid = sharedPreferences.getString("Cookie", "");
-                                            Log.d(TAG, "sessionid：" + sessionid);
-                                            OkHttpClient okHttpClient = new OkHttpClient();
-                                            RequestBody requestBody = new FormBody.Builder()
-                                                    .add("orderId",tvOrder.getText().toString())
-                                                    .add("id",data.get(position).get("id_TOP").toString())
-                                                    .add("idType",data.get(position).get("type_TOP").toString())
-                                                    .build();
-                                            Request request = new Request.Builder()
-                                                    .url(Constant.Host + "/otn/Refund")
-                                                    .addHeader("Cookie", sessionid)
-                                                    .post(requestBody)
-                                                    .build();
-                                            Response response = null;
-                                            try {
-                                                response = okHttpClient.newCall(request).execute();
-                                                Log.d(TAG, "response： " + response);
-                                                String responseData = response.body().string();
-                                                Log.d(TAG, "获取的服务器数据： " + responseData);
-                                                if (response.isSuccessful()){
-                                                    Gson gson = new GsonBuilder().create();
-                                                    String result = gson.fromJson(responseData,String.class);
-                                                    Log.d(TAG, "result： " + result);
-                                                    Log.d(TAG,"order:"+order);
-                                                    msg.what = 1;
-                                                    msg.obj = result;
-                                                }else {
-                                                    msg.what = 2;
-                                                }
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-                                            handler.sendMessage(msg);
-                                        }
-                                    }.start();
+                               if (i == -1){
+//                                        new Thread() {
+//                                            @Override
+//                                            public void run() {
+
+//                                                Message msg = handler.obtainMessage();
+//                                                SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+//                                                String sessionid = sharedPreferences.getString("Cookie", "");
+//                                                Log.d(TAG, "sessionid：" + sessionid);
+//                                                OkHttpClient okHttpClient = new OkHttpClient();
+//                                                RequestBody requestBody = new FormBody.Builder()
+//                                                        .add("orderId", order.getId())
+//                                                        .add("id", order.getPassengerList()[position].getId())
+//                                                        .add("idType", order.getPassengerList()[position].getType())
+//                                                        .build();
+//                                                Request request = new Request.Builder()
+//                                                        .url(Constant.Host + "/otn/Refund")
+//                                                        .addHeader("Cookie", sessionid)
+//                                                        .post(requestBody)
+//                                                        .build();
+//                                                try {
+//                                                    Response response = okHttpClient.newCall(request).execute();
+//                                                    Log.d(TAG, "response： " + response);
+//                                                    String responseData = response.body().string();
+//                                                    Log.d(TAG, "获取的服务器数据： " + responseData);
+//                                                    if (response.isSuccessful()) {
+//                                                        Gson gson = new GsonBuilder().create();
+//                                                        String result = gson.fromJson(responseData, String.class);
+//                                                        Log.d(TAG, "result： " + result);
+//                                                        Log.d(TAG, "order:" + order);
+//                                                        msg.what = 1;
+//                                                        msg.obj = result;
+//                                                    } else {
+//                                                        msg.what = 2;
+//                                                    }
+//                                                } catch (IOException e) {
+//                                                    e.printStackTrace();
+//                                                }
+//                                                handler.sendMessage(msg);
+//                                            }
+//                                        }.start();
+                                   new Thread() {
+                                       @Override
+                                       public void run() {
+                                           Message message = handler.obtainMessage();
+                                           SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+                                           String sessionid = sharedPreferences.getString("Cookie", "");
+                                           try {
+                                               OkHttpClient okHttpClient = new OkHttpClient();
+                                               RequestBody requestBody = new FormBody.Builder()
+                                                       .add("orderId", order.getId())
+                                                       .add("id", order.getPassengerList()[position].getId())
+                                                       .add("idType", order.getPassengerList()[position].getIdType())
+                                                       .build();
+                                               Request request = new Request.Builder()
+                                                       .url(Constant.Host + "/otn/Refund")
+                                                       .addHeader("Cookie", sessionid)
+                                                       .post(requestBody)
+                                                       .build();
+                                               Response response = okHttpClient.newCall(request).execute();
+                                               String responseData = response.body().string();
+                                               if (response.isSuccessful()) {
+                                                   Gson gson = new GsonBuilder().create();
+                                                   String result = gson.fromJson(responseData, String.class);
+                                                   message.what = 1;
+                                                   message.obj = result;
+                                               }
+                                               else {
+                                                   message.what = 2;
+                                               }
+                                           } catch (IOException e) {
+                                               e.printStackTrace();
+                                               message.what = 2;
+                                           }
+                                           handler.sendMessage(message);
+                                       }
+                                   }.start();
                                 }
-//                                else {
-//                                    Toast.makeText()
-//                                }
                             }
-                        })
-                        .create()
+                        }).create()
                         .show();
             }
         });
@@ -214,5 +251,15 @@ public class TicketOrderPayedActivity extends AppCompatActivity {
                         .show();
             }
         });
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
