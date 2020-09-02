@@ -4,4 +4,17 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="orange">#FFA500</color>
+    <color name="SlateBlue">#6A5ACD</color>
+    <color name="RoyalBlue">#4169E1</color>
+    <color name="DoderBlue">#1E90FF</color>
+    <color name="LightSkyBlue">#87CEFA</color>
+    <color name="DeepSkyBlue">#00BFFF</color>
+    <color name="SteelBlue">#4682B4</color>
+    <color name="DarkGreen">#006400</color>
+    <color name="SeaGreen">#2E8B57</color>
+    <color name="PaleGreen">#98FB98</color>
+    <color name="Yellow">#FFFF00</color>
+    <color name="Gold">#FFD700</color>
+    <color name="Maroon">#800000</color>
+    <color name="Black">#000000</color>
 </resources>

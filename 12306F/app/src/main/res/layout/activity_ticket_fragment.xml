@@ -17,8 +17,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="出发城市"
-            android:textSize="16sp"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="17sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -26,8 +26,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="到达城市"
-            android:textSize="16sp"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="17sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -85,14 +85,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="出发日期"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="17sp" />
 
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2019-7-5 星期五"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="17sp" />
     </LinearLayout>
 
     <Button
