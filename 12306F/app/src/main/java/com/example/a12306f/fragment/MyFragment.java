@@ -53,7 +53,6 @@ public class MyFragment extends Fragment {
     private ListView listView_info_my;
     private List<String> list;
     private ArrayAdapter<String> arrayAdapter;
-
     private Button button_out_my;
     private static final String TAG = "MyFragment";
 

@@ -398,7 +398,6 @@ public class AddContactAdd extends AppCompatActivity {
                         ,new String[]{"display_name","_id"}
                         ,new int[]{R.id.TV_name_search,R.id.TV_phone_search});
 //                listView_dialog.setAdapter(searchAdapter);
-
 //                for (int i = 0;i<search1.length;i++){
 //                    Map<String,Object> map = new HashMap<>();
 //                    map.put("name",search1[i]);

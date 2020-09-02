@@ -17,6 +17,8 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.Xml;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -130,6 +132,14 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        //设置全屏模式
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //去除标题行
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // AppCompatActivity默认会有ActionBar，所以此处要隐藏ActionBar
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_login);
 
         //获得实例对象

@@ -5,7 +5,7 @@
     <item
         android:title="删除"
         android:id="@+id/my_contact_delete"
-        android:icon="@drawable/delete_user_25"
+        android:icon="@drawable/passenger_25"
         android:orderInCategory="100"
         app:showAsAction="always"
         />

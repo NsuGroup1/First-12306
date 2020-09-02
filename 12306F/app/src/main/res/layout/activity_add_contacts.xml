@@ -22,6 +22,8 @@
         android:background="#0288D1"
         android:gravity="center"
         android:text="添加乘车人"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addcontacts_lv03" />

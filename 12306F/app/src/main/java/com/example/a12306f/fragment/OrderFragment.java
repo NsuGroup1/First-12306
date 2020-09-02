@@ -116,7 +116,7 @@ public class OrderFragment extends Fragment {
                     intent.putExtra("order",orders[position]);
                     intent.setClass(getActivity(),TicketNeedPayActivity.class);
                     intent.putExtra("order",orders[position]);
-                    intent.putExtra("zw",data.get(position).get("liechehao").toString());
+//                    intent.putExtra("zw",data.get(position).get("liechehao").toString());
                     Log.d(TAG, "onItemClick order" + orders);
                     startActivity(intent);
                 }else if (data.get(position).get("orderStatus").toString().equals("已支付")){
@@ -259,7 +259,7 @@ public class OrderFragment extends Fragment {
                     map.put("orderStationFrom",order.getTrain().getFromStationName()+"-"+order.getTrain().getToStationName()+
                             " "+ order.getPassengerList().length + "人");
                     map.put("orderPrice","￥"+order.getOrderPrice());
-                    map.put("seatNo",order.getPassengerList()[0].getSeat().getSeatNO());
+//                    map.put("seatNo",order.getPassengerList()[0].getSeat().getSeatNO());
                     data.add(map);
                 }
                 orderAdapter.notifyDataSetChanged();

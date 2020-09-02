@@ -11,14 +11,16 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center">
+
         <TextView
             android:id="@+id/tv_previousDay"
             android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:text="前一天"
+            android:background="#29B6F6"
             android:gravity="center"
+            android:text="前一天"
             android:textColor="#ffffff"
-            android:background="#29B6F6"/>
+            android:textSize="18sp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -39,14 +41,16 @@
                 android:text="北京 - 大连"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
         </LinearLayout>
+
         <TextView
             android:id="@+id/tv_afterDay"
             android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:textColor="#ffffff"
-            android:text="后一天"
             android:background="#29B6F6"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:text="后一天"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
     </LinearLayout>
     <ListView
         android:id="@+id/TicketInformation"

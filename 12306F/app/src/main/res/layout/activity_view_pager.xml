@@ -47,7 +47,7 @@
     <ImageView
         android:id="@+id/imageView_vp"
         android:layout_width="126dp"
-        android:layout_height="25dp"
+        android:layout_height="15dp"
         android:src="@drawable/cursor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
