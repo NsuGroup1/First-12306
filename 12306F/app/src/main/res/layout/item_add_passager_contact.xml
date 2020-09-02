@@ -4,7 +4,8 @@
     android:id="@+id/layout_listview_03_adcts"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@drawable/listview_radius_shape">
 
     <CheckBox
         android:id="@+id/checkBox_adcts"

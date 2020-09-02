@@ -218,8 +218,6 @@ public class OrderFragment extends Fragment {
                 if (response.isSuccessful()) {
                     //解析Json
                     Gson gson = new GsonBuilder()
-                            .setDateFormat("MMM d, yyyy, h:mm:ss a")
-
                             .create();
                     Order[] orders = gson.fromJson(responseData,Order[].class);
                     return orders;
