@@ -7,30 +7,34 @@
     <TextView
         android:id="@+id/textView_leixing02"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:text="高级软座" />
+        android:layout_height="30dp"
+        android:text="高级软座"
+        android:textSize="18sp"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/textView_num0201"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18sp"
         android:text="200张" />
 
     <TextView
         android:id="@+id/textView_price02"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18sp"
         android:text="￥120.5"
         android:textColor="#FFA500" />
 
     <Button
         android:id="@+id/button_yuding"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_height="30dp"
         android:background="#29B6F6"
         android:text="预订"
         android:textColor="#ffffff"

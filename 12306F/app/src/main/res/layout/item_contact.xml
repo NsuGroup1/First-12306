@@ -30,16 +30,18 @@
                 <TextView
                     android:id="@+id/contact_name"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:text="陈文飞"
+                    android:gravity="center"
                     android:textColor="#000000"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/contact_age"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:text="(成人)"
+                    android:gravity="center"
                     android:textColor="#000000"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -52,14 +54,15 @@
                 <TextView
                     android:id="@+id/idType"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="25dp"
                     android:text="身份证："
+                    android:gravity="center"
                     android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/id_card_number"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="25dp"
                     android:layout_weight="1"
                     android:text="123456789876543210"
                     android:textSize="15sp" />
@@ -72,16 +75,18 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="25dp"
                     android:text="手机号："
+                    android:gravity="center"
                     android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/phone_number"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="25dp"
                     android:layout_weight="1"
                     android:text="12345678910"
+
                     android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>

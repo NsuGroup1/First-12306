@@ -57,6 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="G108"
+            android:textSize="18sp"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
         <TextView
             android:id="@+id/FromToTime2"
@@ -65,21 +66,21 @@
             android:layout_marginLeft="5dp"
             android:text="04:47-14:46"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="12sp"/>
+            android:textSize="16sp"/>
         <TextView
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=",历时"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="12sp"/>
+            android:textSize="16sp"/>
         <TextView
             android:id="@+id/LiShi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4小时50分"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="12sp"/>
+            android:textSize="16sp"/>
     </LinearLayout>
     <ListView
         android:id="@+id/yuding02_listview"

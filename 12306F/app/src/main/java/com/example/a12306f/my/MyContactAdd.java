@@ -112,33 +112,17 @@ public class MyContactAdd extends AppCompatActivity {
                         String name_lv = searchData.get(position).get("display_name").toString();
                         String phone = searchData.get(position).get("_id").toString();
                         value_search= new String[]{name_lv, "", "", "", phone};
+                        data.clear();
                         for (int i = 0;i<value_search.length;i++){
                             HashMap map_search = new HashMap();
+                            map_search.put("k1",k1[i]);
                             map_search.put("k2",value_search[i]);
+                            map_search.put("k3",k3[0]);
                             data.add(map_search);
                             adapter.notifyDataSetChanged();
                         }
                     }
                 });
-
-//                Uri uri = Uri.parse("content://com.android.contacts/raw_contacts");
-//                Cursor cursor = contentResolver.query(uri,null,null,null,null);
-//                while (cursor.moveToNext()){
-//                    int id =cursor.getInt(cursor.getColumnIndex("_id"));
-//                    String name = cursor.getString(cursor.getColumnIndex("display_name"));
-//                    Log.i("test",id+" "+name);
-//
-//                    Uri uriData = Uri.parse("content://com.android.contacts/raw_contacts/"+id+"/data");
-//                    Cursor cursorData = contentResolver.query(uriData,null,null,null,null);
-//
-//                    while (cursorData.moveToNext()){
-//                        String data1 = cursorData.getString(cursorData.getColumnIndex("data1"));
-//                        String type = cursorData.getString(cursorData.getColumnIndex("mimetype"));
-//                        Log.i("test"," "+data1+":"+type);
-//                        mContactsName.add(name);
-//                        mContactsPhone.add(data1);
-//                    }
-//                }/
 
                 //获取联系人
                 Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
@@ -171,20 +155,16 @@ public class MyContactAdd extends AppCompatActivity {
                 new AlertDialog.Builder(MyContactAdd.this)
                         .setTitle("请选择")
                         .setView(searchView)
-//                        .setAdapter(new SearchAdapter(), new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-////                                String[] value ={}
-////                                Map map2 = new HashMap();
-////                                map2.put("k2",mContacts.get(which));
-////                                data.add(map2);
-//
-//                            }
-//                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DialogClose.setClosable(dialog,true);
+                            }
+                        })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                DialogClose.setClosable(dialog,true);
                             }
                         }).create().show();
         }
@@ -314,51 +294,11 @@ public class MyContactAdd extends AppCompatActivity {
         });
 
         //TODO 获取上个页面传来的数据
-        Intent intent = getIntent();
+//        Intent intent = getIntent();
 //        Map<String,Object> contact = (HashMap<String, Object>) getIntent().getSerializableExtra("row");
 
         data = new ArrayList<Map<String, Object>>();
 
-//        String name = (String) contact.get("name");
-//        String name = "";
-//        map1.put("k1","姓名");
-//        //以左括号进行分割，取第一段
-//        map1.put("k2",name);
-//        map1.put("k3",R.drawable.forward_25);
-//        data.add(map1);
-//
-//        Map<String,Object> map2 = new HashMap<>();
-//        String idType = "";
-//        map2.put("k1","证件类型");
-//        //以冒号进行分割，取第一段
-//        map2.put("k2",idType);
-//        map2.put("k3",R.drawable.forward_25);
-//        data.add(map2);
-//
-//        Map<String,Object> map3 = new HashMap<>();
-////        String idCard = (String) contact.get("idCard");
-//        String idCard = "";
-//        map3.put("k1","证件号码");
-//        //以冒号进行分割，取第一段
-//        map3.put("k2",idCard);
-//        map3.put("k3",R.drawable.forward_25);
-//        data.add(map3);
-//
-//        Map<String,Object> map4 = new HashMap<>();
-////        String age = (String) contact.get("age");
-//        String age = "";
-//        map4.put("k1","乘客类型");
-//        map4.put("k2",age);
-//        map4.put("k3",R.drawable.forward_25);
-//        data.add(map4);
-//
-//        Map<String,Object> map5 = new HashMap<>();
-////        String tel = (String) contact.get("tel");
-//        String tel = "";
-//        map5.put("k1","手机号");
-//        map5.put("k2",tel);
-//        map5.put("k3",R.drawable.forward_25);
-//        data.add(map5);
         for (int i = 0;i <k1.length;i++){
             Map<String,Object> map1 = new HashMap<>();
             map1.put("k1",k1[i]);

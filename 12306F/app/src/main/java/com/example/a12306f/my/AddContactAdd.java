@@ -62,143 +62,6 @@ public class AddContactAdd extends AppCompatActivity {
     Integer[] k3 = {R.drawable.forward_25};
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.my_contact_search,menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    private ContentResolver contentResolver;
-    private ListView listView_dialog;
-    private SimpleAdapter searchAdapter;
-    private List<HashMap<String,Object>> searchData;
-    private String[] value_search;
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                break;
-            case R.id.my_contact_search:
-                contentResolver = getContentResolver();
-                listView_dialog = findViewById(R.id.lv_AMC_dialog_search);
-                searchAdapter = new SimpleAdapter(this,searchData,R.layout.lv_search_dialog_mca,
-                        new String[]{"name","number"},new int[]{R.id.TV_name_search,R.id.TV_phone_search});
-                listView_dialog.setAdapter(searchAdapter);
-                listView_dialog.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String name_lv = searchData.get(position).get("name").toString();
-                        String phone = searchData.get(position).get("number").toString();
-                        value_search= new String[]{name_lv, "", "", "", phone};
-                        for (int i = 0;i<value_search.length;i++){
-                            HashMap map_search = new HashMap();
-                            map_search.put("k2",value_search[i]);
-                            data.add(map_search);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                });
-
-//                Uri uri = Uri.parse("content://com.android.contacts/raw_contacts");
-//                Cursor cursor = contentResolver.query(uri,null,null,null,null);
-//                while (cursor.moveToNext()){
-//                    int id =cursor.getInt(cursor.getColumnIndex("_id"));
-//                    String name = cursor.getString(cursor.getColumnIndex("display_name"));
-//                    Log.i("test",id+" "+name);
-//
-//                    Uri uriData = Uri.parse("content://com.android.contacts/raw_contacts/"+id+"/data");
-//                    Cursor cursorData = contentResolver.query(uriData,null,null,null,null);
-//
-//                    while (cursorData.moveToNext()){
-//                        String data1 = cursorData.getString(cursorData.getColumnIndex("data1"));
-//                        String type = cursorData.getString(cursorData.getColumnIndex("mimetype"));
-//                        Log.i("test"," "+data1+":"+type);
-//                        mContactsName.add(name);
-//                        mContactsPhone.add(data1);
-//                    }
-//                }/
-
-                //获取联系人
-                Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
-                        new String[]{"_id","display_name"},null,null,null);
-
-                while (cursor.moveToNext()){
-                    HashMap map1 = new HashMap();
-                    int _id = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                    String display_name = cursor.getString(cursor.getColumnIndex("display_name"));
-                    Log.d("My12306",_id+","+display_name);
-                    map1.put("name",display_name);
-//                    mContactsName.add(display_name);
-                    Cursor cursor2 = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID+"="+_id,
-                            new String[]{_id+""},null);//传入联系人_id
-                    //获取电话
-                    String number = null;
-                    while (cursor2.moveToNext()){
-                        number = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-//                        mContactsPhone.add(number);
-                        map1.put("number",number);
-                    }
-                    cursor2.close();
-                    searchData.add(map1);
-                }
-                cursor.close();
-
-                View searchView = getLayoutInflater().inflate(R.layout.dialog_mycontact_search,null);
-
-                new AlertDialog.Builder(AddContactAdd.this)
-                        .setTitle("请选择")
-                        .setView(searchView)
-//                        .setAdapter(new SearchAdapter(), new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-////                                String[] value ={}
-////                                Map map2 = new HashMap();
-////                                map2.put("k2",mContacts.get(which));
-////                                data.add(map2);
-//
-//                            }
-//                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        }).create().show();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-//    class SearchAdapter extends BaseAdapter{
-//        private TextView tv_name,tv_phone;
-//
-//        @Override
-//        public int getCount() {
-//            return mContactsName.size();
-//        }
-//
-//        @Override
-//        public Object getItem(int position) {
-//            return position;
-//        }
-//
-//        @Override
-//        public long getItemId(int position) {
-//            return position;
-//        }
-//
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//            View view = getLayoutInflater().inflate(R.layout.lv_search_dialog_mca,null);
-//            tv_name = view.findViewById(R.id.TV_name_search);
-//            tv_phone = view.findViewById(R.id.TV_phone_search);
-//            tv_name.setText(mContactsName.get(position));
-//            tv_phone.setText(mContactsPhone.get(position));
-//            return view;
-//        }
-//    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_contact_add);
@@ -503,6 +366,109 @@ public class AddContactAdd extends AppCompatActivity {
             }
         });
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.my_contact_search,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private ContentResolver contentResolver;
+    private ListView listView_dialog;
+    private SimpleAdapter searchAdapter;
+    private List<HashMap<String,Object>> searchData;
+    private String[] value_search;
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.my_contact_search:
+                contentResolver = getContentResolver();
+                View searchView = getLayoutInflater().inflate(R.layout.dialog_mycontact_search,null);
+
+//                View view = this.getLayoutInflater().inflate(R.layout.dialog_mycontact_search,null);
+                listView_dialog = searchView.findViewById(R.id.lv_AMC_dialog_search);
+                searchData = new ArrayList<>();
+                SimpleAdapter searchAdapter = new SimpleAdapter(AddContactAdd.this
+                        ,searchData
+                        ,R.layout.lv_search_dialog_mca
+                        ,new String[]{"display_name","_id"}
+                        ,new int[]{R.id.TV_name_search,R.id.TV_phone_search});
+//                listView_dialog.setAdapter(searchAdapter);
+
+//                for (int i = 0;i<search1.length;i++){
+//                    Map<String,Object> map = new HashMap<>();
+//                    map.put("name",search1[i]);
+//                    map.put("number",search2[i]);
+//                    searchData.add((HashMap<String, Object>) map);
+//                }
+                listView_dialog.setAdapter(searchAdapter);
+                listView_dialog.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String name_lv = searchData.get(position).get("display_name").toString();
+                        String phone = searchData.get(position).get("_id").toString();
+                        value_search= new String[]{name_lv, "", "", "", phone};
+                        data.clear();
+                        for (int i = 0;i<value_search.length;i++){
+                            HashMap map_search = new HashMap();
+                            map_search.put("k1",k1[i]);
+                            map_search.put("k2",value_search[i]);
+                            map_search.put("k3",k3[0]);
+                            data.add(map_search);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+
+                //获取联系人
+                Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
+                        new String[]{"_id","display_name"},null,null,null);
+
+                while (cursor.moveToNext()){
+                    HashMap map1 = new HashMap();
+                    int _id = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                    String display_name = cursor.getString(cursor.getColumnIndex("display_name"));
+                    Log.d("My12306",_id+","+display_name);
+                    map1.put("display_name",display_name);
+//                    mContactsName.add(display_name);
+                    Cursor cursor2 = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID+"=?"+_id,
+                            new String[]{_id+""},null);//传入联系人_id
+                    //获取电话
+                    String number = null;
+                    while (cursor2.moveToNext()){
+                        number = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+//                        mContactsPhone.add(number);
+                        map1.put("_id",number);
+                    }
+                    cursor2.close();
+                    searchData.add(map1);
+                }
+                cursor.close();
+
+//                View searchView = getLayoutInflater().inflate(R.layout.dialog_mycontact_search,null);
+
+                new AlertDialog.Builder(AddContactAdd.this)
+                        .setTitle("请选择")
+                        .setView(searchView)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DialogClose.setClosable(dialog,true);
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DialogClose.setClosable(dialog,true);
+                            }
+                        }).create().show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

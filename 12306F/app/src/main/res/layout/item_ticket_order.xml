@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -22,7 +22,7 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="70dp"
+            android:layout_height="91dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -37,14 +37,15 @@
                     android:layout_weight="1"
                     android:text="订单编号:7988433"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textSize="12sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_order_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="已支付"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -56,7 +57,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
@@ -64,7 +65,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="G108"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="22sp" />
 
                     <TextView
                         android:id="@+id/tv_order_date"
@@ -72,7 +74,7 @@
                         android:layout_height="wrap_content"
                         android:text="2019-8-30"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <TextView
@@ -82,14 +84,14 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="北京-上海 2人"
-                    android:textSize="12sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_order_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="￥1020"
-                    android:textSize="12sp" />
+                    android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>
 

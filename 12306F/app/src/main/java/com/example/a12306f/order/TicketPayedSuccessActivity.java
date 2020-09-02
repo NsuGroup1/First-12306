@@ -50,10 +50,12 @@ public class TicketPayedSuccessActivity extends AppCompatActivity {
         //创建二维码
 //        Map<String,Object> contact = (HashMap<String, Object>) getIntent().getSerializableExtra("row");
         Order order = (Order) getIntent().getSerializableExtra("order");
+        String s = getIntent().getStringExtra("zw");
         ZxingUtils.createQRImage(
                 "订单号："+order.getId() + "," +"列车号："+ order.getTrain().getTrainNo() + "," +
                         "出发日期："+order.getTrain().getStartTrainDate() + "," +
-                        "乘客人数："+order.getPassengerList().length + "  价钱："+ order.getOrderPrice(), imageView,700,700
+                        "乘客人数："+order.getPassengerList().length + "   价钱："+ order.getOrderPrice()+","+
+                "座位号："+s, imageView,700,700
 //                2020 + "," + "D5" + "," +
 //                2020 + "," +
 //                        123456, imageView,700,700

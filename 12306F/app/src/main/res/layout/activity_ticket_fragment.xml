@@ -17,6 +17,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="出发城市"
+            android:textSize="15sp"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -25,6 +26,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="到达城市"
+            android:textSize="15sp"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
@@ -42,6 +44,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="北京"
+            android:textSize="25sp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageView
@@ -64,7 +67,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="成都"
-            android:textSize="20sp" />
+            android:textSize="25sp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -111,7 +114,8 @@
             android:layout_width="25dp"
             android:layout_height="match_parent"
             android:gravity="top"
-            android:text="查询历史" />
+            android:text="查询历史"
+            android:textSize="20sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"

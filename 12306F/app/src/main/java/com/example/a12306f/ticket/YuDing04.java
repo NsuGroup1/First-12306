@@ -67,6 +67,8 @@ public class YuDing04 extends AppCompatActivity {
                         Intent intent = new Intent();
                         intent.setClass(YuDing04.this,TicketPayedSuccessActivity.class);
                         intent.putExtra("order",order);
+                        for (int i = 0;i < data.size();i++)
+                            intent.putExtra("zw",data.get(i).get("liechehao").toString());
                         Log.d("order-----", String.valueOf(order));
                         startActivity(intent);
                     }else if ("0".equals(result1)){

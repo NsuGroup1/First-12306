@@ -26,7 +26,7 @@
                 android:layout_height="56dp"
                 android:gravity="center|bottom"
                 android:text="北京"
-                android:textSize="20sp"
+                android:textSize="25sp"
                 android:textColor="#000000"/>
 
             <TextView
@@ -34,6 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:gravity="center"
+                android:textSize="15sp"
                 android:text="TextView"
                 android:textColor="#CCCCCC"/>
 
@@ -41,6 +42,7 @@
                 android:id="@+id/textView_leixing03"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
                 android:gravity="center|top"
                 android:text="TextView" />
 
@@ -55,7 +57,8 @@
                 android:id="@+id/textView_liechehao03"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:gravity="center"
+                android:textSize="20sp"
+                android:gravity="center|bottom"
                 />
 
             <ImageView
@@ -68,6 +71,7 @@
                 android:id="@+id/textView_date03"
                 android:layout_width="match_parent"
                 android:layout_height="39dp"
+                android:textSize="18sp"
                 android:gravity="center" />
         </LinearLayout>
 
@@ -82,7 +86,7 @@
                 android:layout_height="56dp"
                 android:gravity="center|bottom"
                 android:text="大连"
-                android:textSize="20sp"
+                android:textSize="25sp"
                 android:textColor="#000000"/>
 
             <TextView
@@ -90,6 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:gravity="center"
+                android:textSize="15sp"
                 android:text="TextView"
                 android:textColor="#CCCCCC"/>
 
@@ -99,6 +104,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center|top"
                 android:text="TextView"
+                android:textSize="18sp"
                 android:textColor="#FFA500"/>
 
         </LinearLayout>
